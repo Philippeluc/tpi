@@ -1,3 +1,7 @@
+<?php
+require 'functions/functions.php';
+require 'controller.php';
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,12 +10,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Connexion</title>
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="styles/navbarstyle.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
-            <!-- Les navbar seront générées avec PHP selon l'utilisateur. -->
-            <?php include_once 'menu/defaultmenu.php'; ?>
+            <?php 
+                require 'session_menu.php';
+            ?>
+            <div class="row">
+                <h1>Connexion</h1>
+            </div>
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
                     <div class="panel panel-default">
@@ -29,7 +36,7 @@
                                         <label>Mot de passe :</label>
                                         <input class="form-control" placeholder="Mot de passe" name="password" type="password" required="">
                                     </div>
-                                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Se connecter">
+                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="connect" value="Se connecter">
                                 </fieldset>
                             </form>
                         </div>
