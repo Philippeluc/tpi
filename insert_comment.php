@@ -27,7 +27,7 @@ require 'controller.php';
                                 <fieldset>
                                     <div class="form-group">
                                         <label>Commentaire :</label>
-                                        <textarea class="form-control" placeholder="Commentaire" name="comment" cols="50" rows="10" required=""></textarea>
+                                        <textarea class="form-control" placeholder="Commentaire" name="comment" cols="50" rows="10" style="max-width: 100%;" required=""></textarea>
                                     </div>
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_comment" value="Commenter">
                                 </fieldset>

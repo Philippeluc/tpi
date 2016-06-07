@@ -16,12 +16,12 @@ require 'controller.php';
             <?php
             require 'session_menu.php';
             ?>
-            <div class="row">
-                <h1><?php echo date('l jS \of F Y'); ?></h1>
+            <div class="row col-md-offset-0">
+                <h1><?php echo date('l jS \of F Y'); ?><h4><select class="input-sm"><option value="day">Jour</option><option value="week">Semaine</option><option value="month">Mois</option></select><input class="btn btn-primary btn-sm" type="submit" name="selectDateFormat"/></h4></h1><br/>
             </div>
             <div class="row">
                 <?php
-                    getAllEvents();
+                getAllEvents();
                 ?>
             </div>
         </div>

@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-$folder = getEventImageDir();     // The folder where the image is uploaded.
+$event_folder = getEventImageDir();     // The folder where the event image is uploaded.
+$user_folder = getUserImageDir();     // The folder where the avatar image is uploaded.
 
 // Checks if the insert event button is pressed.
 if (isset($_POST['insert_event'])) {
@@ -17,16 +18,16 @@ if (isset($_POST['insert_event'])) {
 
     // Getting the datas for the image.
     $file = $_FILES['event_image'];       // The name of the image.
-    $datas['event_image'] = $file['name'];
+    $datas['event_image'] = filter_var($file['name'], FILTER_SANITIZE_SPECIAL_CHARS);
 
     // Add the new event in the database.
     insertNewEvent($datas);
     // Select the id from the event for the image.
     $function = selectIdEventFromName($datas['event_title']);
     // Upload the image.
-    uploadEventImage($folder, $file, $function);
+    uploadEventImage($event_folder, $file, $function);
     // Redirect to the index page.
-//    header('Location: index.php');   
+    header('Location: index.php');   
 }
 
 // Checks if the insert user button is pressed.
@@ -60,9 +61,6 @@ if (isset($_REQUEST['connect'])) {
             // Set his group
             setUserGroup(getGroup($datas));
             }
-//            if (!isset($_SESSION['loguid'])) {
-//                $_SESSION['loguid'] = getIdui($data);
-//            }
             header('Location: index.php');
         }
 }
@@ -79,14 +77,40 @@ if (isset($_REQUEST['logout'])) {
 if (isset($_POST['insert_comment'])) {
     // Getting the datas (secured!) from the form fields.    
     $datas['comment_time'] = date('Y-m-d H:i:s');
-    $datas['comment_text'] = $_POST['comment'];
+    $datas['comment_text'] = filter_var($_POST['comment'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['event_id'] = $_REQUEST['event_id'];
     $datas['user_id'] = getUserId();
 
     // Add the new comment in the database.
     insertNewComment($datas);
+    // Redirect to the event detail page.
+    header('Location: event_details.php?event_id='.$_REQUEST['event_id']);   
+}
+
+// Checks if the edit profile button is pressed.
+if (isset($_POST['edit_profile'])) {
+    // Getting the datas (secured!) from the form fields.
+    $datas['user_email'] = getUserEmail();
+    $datas['user_name'] = filter_var($_POST['modify_name'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $datas['user_firstname'] = filter_var($_POST['modify_firstname'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $datas['user_organisation'] = filter_var($_POST['modify_organisation'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $datas['user_adress'] = filter_var($_POST['modify_adress'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $datas['user_desc'] = filter_var($_POST['modify_desc'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $datas['user_id'] = getUserId();
+
+    // Getting the datas for the image.
+    $file = $_FILES['modify_avatar'];       // The name of the image.
+    $datas['user_avatar'] = filter_var($file['name'], FILTER_SANITIZE_SPECIAL_CHARS);
+
+    // Edit the new profile in the database.
+    editUserData($datas);
+    
+    // Select the id from the user for the image.
+    $function = selectIdusersFromName($datas['user_email']);
+    // Upload the image.
+    uploadUserImage($user_folder, $file, $function);
     // Redirect to the index page.
-    // header('Location: index.php');   
+    header('Location: index.php');   
 }
 
 

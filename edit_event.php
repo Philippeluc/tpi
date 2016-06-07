@@ -16,22 +16,36 @@ require 'controller.php';
             <?php 
                 require 'session_menu.php';
             ?>
+            <div class="row col-md-offset-0">
+                <h1>Modifier un événement</h1>
+            </div>
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <div class="panel panel-default">
+                <div class="col-md-4 col-md-offset-2 pull-left">
+                    <div class="panel panel-default" style="width: 800px;">
                         <div class="panel-heading">
                             <h3 class="panel-title">Modifier un événement</h3>
                         </div>
-                        <div class="panel-body">
-                            <form accept-charset="UTF-8" role="form" action="#" method="POST">
+                        <div class="panel-body" style="width: 800px;">
+                            <form accept-charset="UTF-8" role="form" action="#" method="POST" enctype="multipart/form-data">
                                 <fieldset>
                                     <div class="form-group">
                                         <label>Titre :</label>
                                         <input class="form-control" placeholder="Titre" name="event_title" type="text" required="">
                                     </div>
                                     <div class="form-group">
-                                        <label>Lieu :</label>
-                                        <input class="form-control" placeholder="Lieu" name="event_location" type="text" required="">
+                                        <label>Rue :</label>
+                                        <input class="form-control" placeholder="Rue" name="event_street" type="text" required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ville :</label>
+                                        <input class="form-control" placeholder="Ville" name="event_city" type="text" required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Pays :</label>
+                                        <select class="form-control" name="event_country" required="">
+                                            <option>Séléctionnez un pays</option>
+                                            <?php getCountriesList() ?>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Date de début :</label>
@@ -39,17 +53,17 @@ require 'controller.php';
                                     </div>
                                     <div class="form-group">
                                         <label>Date de fin :</label>
-                                        <input class="form-control"  name="event_dateend" type="date" required="">
+                                        <input class="form-control"  name="event_dateend" type="date">
                                     </div>
                                     <div class="form-group">
                                         <label>Description :</label>
-                                        <textarea class="form-control" placeholder="Description" name="event_desc" cols="50" rows="10" required=""></textarea>
+                                        <textarea class="form-control" placeholder="Description" name="event_desc" cols="50" rows="10" required="" style="max-width: 100%;"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Image :</label>
                                         <input class="form-control" placeholder="Image" name="event_image" type="file" required="">
                                     </div>
-                                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Modifier">
+                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_event" value="Ajouter l'événement">
                                 </fieldset>
                             </form>
                         </div>

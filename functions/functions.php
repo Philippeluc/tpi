@@ -21,9 +21,9 @@ function &myDatabase() {
 
 // Function that inserts new events to the database.
 function insertNewEvent($datas) {
-    $query1 = "INSERT INTO endroit (rue, ville, pays) VALUES (:street, :city, :country)";
-    $query2 = "SELECT id FROM endroit WHERE rue = :street AND ville = :city AND iso_pays = :country";
-    $query3 = "INSERT INTO evenement (titre, dateDebut, dateFin, description, image, id_endroit, id_utilisateur) VALUES (:title, :datestart, :dateend, :desc, :image, :id_endroit, :id_utilisateur)";
+    $query1 = "INSERT INTO tpi.endroit (rue, ville, iso_pays) VALUES (:street, :city, :country)";
+    $query2 = "SELECT id FROM tpi.endroit WHERE rue = :street AND ville = :city AND iso_pays = :country";
+    $query3 = "INSERT INTO tpi.evenement (titre, dateDebut, dateFin, description, image, id_endroit, id_utilisateur) VALUES (:title, :datestart, :dateend, :desc, :image, :id_endroit, :id_utilisateur)";
 
     $ps1 = myDatabase()->prepare($query1);
     $ps2 = myDatabase()->prepare($query2);
@@ -57,6 +57,11 @@ function getEventImageDir() {
     return getcwd() . '/images/event_images/';
 }
 
+// Function that sets the folder where the users avatar are uploaded.
+function getUserImageDir() {
+    return getcwd() . '/images/avatar_images/';
+}
+
 // Function that uploads the event image in the correct folder.
 function uploadEventImage($folder, $file, $id) {
     $max_size = 10000000;       // The max size of the image.
@@ -72,10 +77,38 @@ function uploadEventImage($folder, $file, $id) {
         $error = 'The file you want to upload is to big!';
     }
     if (!isset($error)) { // If there's no errors upload the file.
-        $file['name'] = $id . $extension;
+        $file['name'] = $id .'_event'. $extension;
         if (move_uploaded_file($file['tmp_name'], $folder . $file['name'])) { // If the function returns TRUE the upload is a succes.
             // Rename the image with it's event_id from the database.
-            renameImageWithId($id, $extension);
+            renameEventImageWithId($id, $extension);
+            echo 'Upload done with succes!';
+        } else { // Else return FALSE
+            echo 'The upload has failed!';
+        }
+    } else {
+        echo $error;
+    }
+}
+
+// Function that uploads the user image in the correct folder.
+function uploadUserImage($folder, $file, $id) {
+    $max_size = 10000000;       // The max size of the image.
+    $size = $file['size'];       // The size of the image to upload.
+    $extensions = array('.png', '.gif', '.jpg', '.jpeg', '.tiff', '.JPG', '.PNG', '.GIF', '.TIFF', '.JPEG');       // The allowed extensions.
+    $extension = strrchr($file['name'], '.');
+
+    // Start of the security check.
+    if (!in_array($extension, $extensions)) { // If the extension is not in the array.
+        $error = 'Yous must upload a file with the folowing extensions png, gif, tiff, jpg or jpeg';
+    }
+    if ($size > $max_size) {       // If the size is bigger than the max size.
+        $error = 'The file you want to upload is to big!';
+    }
+    if (!isset($error)) { // If there's no errors upload the file.
+        $file['name'] = $id .'_avatar'. $extension;
+        if (move_uploaded_file($file['tmp_name'], $folder . $file['name'])) { // If the function returns TRUE the upload is a succes.
+            // Rename the image with it's user_id from the database.
+            renameUserImageWithId($id, $extension);
             echo 'Upload done with succes!';
         } else { // Else return FALSE
             echo 'The upload has failed!';
@@ -97,14 +130,37 @@ function selectIdEventFromName($name) {
     return $id;
 }
 
+// Function that selects a user from an email and changes it with it's user_id.
+function selectIdUsersFromName($email) {
+    $query = "SELECT * FROM utilisateur WHERE email = :email";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':email', $email);
+    $ps->execute();
+    $temp = $ps->fetch(PDO::FETCH_OBJ);
+    $id = $temp->id;
+
+    return $id;
+}
+
 // Function that renames the image with it's event_id from the database.
-function renameImageWithId($id, $extension) {
-    $temp = $id . $extension;
+function renameEventImageWithId($id, $extension) {
+    $temp = $id .'_event'. $extension;
     $query = "UPDATE evenement SET image = :temp WHERE id = :id";
     $ps = myDatabase()->prepare($query);
     $ps->bindParam(':temp', $temp);
     $ps->bindParam(':id', $id);
     $ps->execute();
+}
+
+// Function that renames the image with it's user_id from the database.
+function renameUserImageWithId($id, $extension) {
+    $temp = $id .'_avatar'. $extension;
+    $query = "UPDATE utilisateur SET avatar = :temp WHERE id = :id";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':temp', $temp);
+    $ps->bindParam(':id', $id);
+    $isok = $ps->execute();
+    return $isok;
 }
 
 // TO FINISH!!! (add the table "endroit" informations)
@@ -121,13 +177,13 @@ function getAllEvents() {
         $event_dateend = $row['dateFin'];
         $event_desc = $row['description'];
         $event_image = $row['image'];
-
+        
         echo "<div class='col-xs-6 col-lg-4'>
                   <a href='event_details.php?event_id=$event_id' class='thumbnail' >
                     <img alt='Image' src='images/event_images/$event_image' style='width:500px;height:300px;padding:2rem'>
                   </a>
                   <h3>$event_title</h3>
-                  <p>$event_desc</p>
+                  <p>Date de début :$event_datestart</p><p>Date de fin : $event_dateend</p>
                   <p><a class='btn btn-default' href='event_details.php?event_id=$event_id' role='button'>Détails &raquo;</a></p>
                   </div>";
     }
@@ -167,7 +223,7 @@ function getEventDetail($event_id) {
                             <img alt='Image' src='images/event_images/$event_image' style='width:600px;height:400px;padding:2rem'>
                         </div>
                         $event_desc<br/>
-                        <a class='btn btn-default' href='index.php' role='button'>Accueil &raquo</a>
+                        <div class='pull-right'><a class='btn btn-default' href='index.php' role='button'>Accueil &raquo</a></div>
                     </div>
                  </div>";
     }
@@ -199,6 +255,7 @@ function checkUser($datas) {
             if ($isok[0][1] == $datas['email'] && $isok[0][3] == sha1($datas['password'])) {
                 // Store the user ID in session.
                 $_SESSION['userid'] = $isok[0][0];
+                $_SESSION['useremail'] = $isok[0][1];
 
                 $isok = true;
             } else {
@@ -229,7 +286,7 @@ function getGroup($datas) {
 
 // Function that returns the events searched in the searchbar.
 function searchAnEvent($search_query) {
-    $query = "SELECT * FROM evenement WHERE description LIKE '%$search_query%' OR titre LIKE '%$search_query%'";
+    $query = "SELECT * FROM evenement WHERE titre LIKE '%$search_query%'";
     $qr = myDatabase()->query($query);
     $test = $qr->fetchAll(PDO::FETCH_ASSOC);
     foreach ($test as $row) {
@@ -240,12 +297,15 @@ function searchAnEvent($search_query) {
         $event_desc = $row['description'];
         $event_image = $row['image'];
 
-        echo "<div class='col-xs-6 col-lg-4'>
+        echo "<div class='row col-md-offset-0'>
+                <h1>Résultats de la recherche \"$search_query\"</h1><br/>
+              </div>
+                  <div class='col-xs-6 col-lg-4'>
                   <a href='event_details.php' class='thumbnail'>
                     <img alt='Image' src='images/event_images/$event_image' style='width:500px;height:300px;padding:2rem'>
                   </a>
                   <h3>$event_title</h3>
-                  <p>$event_desc</p>
+                  <p>Date de début :$event_datestart</p><p>Date de fin : $event_dateend</p>
                   <p><a class='btn btn-default' href='event_details.php?event_id=$event_id' role='button'>Détails &raquo;</a></p>
                   </div>";
     }
@@ -299,8 +359,16 @@ function isUserAdmin() {
     return (getUserGroup() == 2);
 }
 
+/**
+ * Récupère l'ID de l'utilisateur.
+ * @return type
+ */
 function getUserId() {
     return (isset($_SESSION['userid'])) ? $_SESSION['userid'] : -1;
+}
+
+function getUserEmail() {
+    return $_SESSION['useremail'];
 }
 
 /**
@@ -341,7 +409,7 @@ function insertNewComment($datas) {
 // TO DO (NOT ALL THE USERS CAN DISPLAY THEIR COMMENTS)
 // Function that displays all the comments of an event.
 function displayEventComment($event_id) {
-    $query = "SELECT time,texte,pseudo FROM commentaire,utilisateur,evenement WHERE evenement.id='$event_id' and utilisateur.id = evenement.id_utilisateur and  commentaire.id_utilisateur = utilisateur.id and commentaire.id_evenement = evenement.id";
+    $query = "SELECT time,texte,pseudo,avatar FROM commentaire,utilisateur,evenement WHERE evenement.id= $event_id and   commentaire.id_utilisateur = utilisateur.id and commentaire.id_evenement = evenement.id";
     $qr = myDatabase()->prepare($query);
     $qr->execute();
     $test = $qr->fetchAll(PDO::FETCH_ASSOC);
@@ -349,6 +417,7 @@ function displayEventComment($event_id) {
         $comment_text = $row['texte'];
         $comment_datetime = $row['time'];
         $comment_pseudo = $row['pseudo'];
+        $comment_avatar = $row['avatar'];
 
         echo "<div class = 'panel-body'>
                 <div id='comments' class='col-lg-12'>
@@ -356,7 +425,7 @@ function displayEventComment($event_id) {
                         <!-- Forum Post -->
                         <li class='media well'>
                             <div class='pull-left user-info col-lg-1' href='#'>
-                                <img class='avatar img-circle img-thumbnail' src='http://snipplicious.com/images/guest.png'
+                                <img class='avatar img-circle img-thumbnail' src='images/avatar_images/$comment_avatar'
                                      width='64' alt='Generic placeholder image'>
                                 <br/>
                                 <strong>$comment_pseudo</strong>
@@ -373,9 +442,24 @@ function displayEventComment($event_id) {
                                 <a href='#'><span class='input-group-addon'><i class='glyphicon glyphicon-remove-sign'></i></span></a>
                             </div>
                         </li>
-                        <!-- Forum Post END -->
                     </ul>
                 </div>
             </div>";
     }
+}
+
+// Function that modify the user informations from the database.
+function editUserData($datas) {
+    $query3 = "UPDATE utilisateur SET nom = :name, prenom = :firstname, organisation = :organisation, adresse = :adress, avatar = :avatar, description = :description WHERE id = :id_utilisateur";
+    $ps3 = myDatabase()->prepare($query3);
+
+    $ps3->bindParam(':name', $datas['user_name'], PDO::PARAM_STR);
+    $ps3->bindParam(':firstname', $datas['user_firstname'], PDO::PARAM_STR);
+    $ps3->bindParam(':organisation', $datas['user_organisation'], PDO::PARAM_STR);
+    $ps3->bindParam(':adress', $datas['user_adress'], PDO::PARAM_STR);
+    $ps3->bindParam(':avatar', $datas['user_avatar'], PDO::PARAM_STR);
+    $ps3->bindParam(':description', $datas['user_desc'], PDO::PARAM_STR);
+    $ps3->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_STR);
+
+    $ps3->execute();
 }

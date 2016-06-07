@@ -15,14 +15,9 @@ require 'controller.php';
         <div class="container">
             <?php
             require 'session_menu.php';
-            ?>
-            <div class="row">
-                <h1>Résultats de la recherche</h1>
-            </div>
-            <?php
             if (isset($_GET['search'])) 
                 {
-                $search_query = $_GET['user_query'];
+                $search_query = filter_var($_GET['user_query'], FILTER_SANITIZE_SPECIAL_CHARS);
                 searchAnEvent($search_query);
             }
             ?>  

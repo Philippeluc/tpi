@@ -16,40 +16,43 @@ require 'controller.php';
             <?php 
                 require 'session_menu.php';
             ?>
+            <div class="row col-md-offset-0">
+                <h1>Modifier mon profil</h1>
+            </div>
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <div class="panel panel-default">
+                <div class="col-md-4 col-md-offset-2 pull-left">
+                    <div class="panel panel-default" style="width: 800px;">
                         <div class="panel-heading">
                             <h3 class="panel-title">Modifier le profil</h3>
                         </div>
-                        <div class="panel-body">
-                            <form accept-charset="UTF-8" role="form" action="#" method="POST">
+                        <div class="panel-body" style="width: 800px;">
+                            <form accept-charset="UTF-8" role="form" action="#" method="POST" enctype="multipart/form-data">
                                 <fieldset>
                                     <div class="form-group">
                                         <label>Nom :</label>
-                                        <input class="form-control" placeholder="Nom" name="name" type="text" required="">
+                                        <input class="form-control" placeholder="Nom" name="modify_name" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Prénom :</label>
-                                        <input class="form-control" placeholder="Prénom" name="firstname" type="text" required="">
+                                        <input class="form-control" placeholder="Prénom" name="modify_firstname" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Organisation :</label>
-                                        <input class="form-control" placeholder="Organisation" name="organisation" type="text" required="">
+                                        <input class="form-control" placeholder="Organisation" name="modify_organisation" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Adresse :</label>
-                                        <input class="form-control" placeholder="Adresse" name="adress" type="text" required="">
+                                        <input class="form-control" placeholder="Adresse" name="modify_adress" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Avatar :</label>
-                                        <input class="form-control" name="avatar" type="file" required="">
+                                        <input class="form-control" name="modify_avatar" type="file" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Description :</label>
-                                        <textarea class="form-control" placeholder="Description" name="description" cols="50" rows="10" required=""></textarea>
+                                        <textarea class="form-control" placeholder="Description" name="modify_desc" cols="50" rows="10" required=""></textarea>
                                     </div>
-                                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Modifier">
+                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="edit_profile" value="Modifier">
                                 </fieldset>
                             </form>
                         </div>

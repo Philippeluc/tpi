@@ -16,7 +16,7 @@ require 'controller.php';
             <?php
             require 'session_menu.php';
             ?>
-            <div class="row">
+            <div class="row col-md-offset-0">
                 <h1>Administration</h1>
             </div>
         </div>
