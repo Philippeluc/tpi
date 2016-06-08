@@ -50,7 +50,7 @@ require 'controller.php';
                                     </div>
                                     <div class="form-group">
                                         <label>Description :</label>
-                                        <textarea class="form-control" placeholder="Description" name="modify_desc" cols="50" rows="10" required=""></textarea>
+                                        <textarea class="form-control" placeholder="Description" name="modify_desc" cols="50" rows="10" style="max-width: 100%;" required=""></textarea>
                                     </div>
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="edit_profile" value="Modifier">
                                 </fieldset>

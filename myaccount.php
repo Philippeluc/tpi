@@ -1,6 +1,7 @@
 <?php
 require 'functions/functions.php';
 require 'controller.php';
+$datas['user_id'] = getUserId();
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,6 +19,10 @@ require 'controller.php';
             ?>
             <div class="row col-md-offset-0">
                 <h1>Mon compte</h1>
+                <form method="POST" action="#">
+                    <?php displayEventFromUser($datas); ?>
+                    <button type="submit" name="delete_event" id="navbarbutton" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
+                </form>
             </div>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

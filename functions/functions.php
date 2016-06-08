@@ -2,7 +2,11 @@
 
 require 'mysql.inc.php';
 
-// Function that creates a database connector.
+/**
+ * Function that creates a database connector.
+ * @staticvar type $dbc
+ * @return \PDO
+ */
 function &myDatabase() {
     static $dbc = null;
 
@@ -19,7 +23,10 @@ function &myDatabase() {
     return $dbc;
 }
 
-// Function that inserts new events to the database.
+/**
+ * Function that inserts new events to the database.
+ * @param type $datas
+ */
 function insertNewEvent($datas) {
     $query1 = "INSERT INTO tpi.endroit (rue, ville, iso_pays) VALUES (:street, :city, :country)";
     $query2 = "SELECT id FROM tpi.endroit WHERE rue = :street AND ville = :city AND iso_pays = :country";
@@ -52,17 +59,28 @@ function insertNewEvent($datas) {
     $ps3->execute();
 }
 
-// Function that sets the folder where the event images are uploaded.
+/**
+ * Function that sets the folder where the event images are uploaded.
+ * @return type
+ */
 function getEventImageDir() {
     return getcwd() . '/images/event_images/';
 }
 
-// Function that sets the folder where the users avatar are uploaded.
+/**
+ * Function that sets the folder where the users avatar are uploaded.
+ * @return type
+ */
 function getUserImageDir() {
     return getcwd() . '/images/avatar_images/';
 }
 
-// Function that uploads the event image in the correct folder.
+/**
+ * Function that uploads the event image in the correct folder.
+ * @param type $folder
+ * @param string $file
+ * @param type $id
+ */
 function uploadEventImage($folder, $file, $id) {
     $max_size = 10000000;       // The max size of the image.
     $size = $file['size'];       // The size of the image to upload.
@@ -77,7 +95,7 @@ function uploadEventImage($folder, $file, $id) {
         $error = 'The file you want to upload is to big!';
     }
     if (!isset($error)) { // If there's no errors upload the file.
-        $file['name'] = $id .'_event'. $extension;
+        $file['name'] = $id . '_event' . $extension;
         if (move_uploaded_file($file['tmp_name'], $folder . $file['name'])) { // If the function returns TRUE the upload is a succes.
             // Rename the image with it's event_id from the database.
             renameEventImageWithId($id, $extension);
@@ -90,7 +108,12 @@ function uploadEventImage($folder, $file, $id) {
     }
 }
 
-// Function that uploads the user image in the correct folder.
+/**
+ * Function that uploads the user avatar in the correct folder.
+ * @param type $folder
+ * @param string $file
+ * @param type $id
+ */
 function uploadUserImage($folder, $file, $id) {
     $max_size = 10000000;       // The max size of the image.
     $size = $file['size'];       // The size of the image to upload.
@@ -105,7 +128,7 @@ function uploadUserImage($folder, $file, $id) {
         $error = 'The file you want to upload is to big!';
     }
     if (!isset($error)) { // If there's no errors upload the file.
-        $file['name'] = $id .'_avatar'. $extension;
+        $file['name'] = $id . '_avatar' . $extension;
         if (move_uploaded_file($file['tmp_name'], $folder . $file['name'])) { // If the function returns TRUE the upload is a succes.
             // Rename the image with it's user_id from the database.
             renameUserImageWithId($id, $extension);
@@ -118,7 +141,11 @@ function uploadUserImage($folder, $file, $id) {
     }
 }
 
-// Function that selects an event from a name and changes it with it's event_id.
+/**
+ * Function that selects an event from a name and changes it with it's event_id.
+ * @param type $name
+ * @return type
+ */
 function selectIdEventFromName($name) {
     $query = "SELECT * FROM evenement WHERE titre = :titre";
     $ps = myDatabase()->prepare($query);
@@ -130,7 +157,11 @@ function selectIdEventFromName($name) {
     return $id;
 }
 
-// Function that selects a user from an email and changes it with it's user_id.
+/**
+ * Function that selects a user from an email and changes it with it's user_id.
+ * @param type $email
+ * @return type
+ */
 function selectIdUsersFromName($email) {
     $query = "SELECT * FROM utilisateur WHERE email = :email";
     $ps = myDatabase()->prepare($query);
@@ -142,9 +173,13 @@ function selectIdUsersFromName($email) {
     return $id;
 }
 
-// Function that renames the image with it's event_id from the database.
+/**
+ * Function that renames the image with it's event_id from the database.
+ * @param type $id
+ * @param type $extension
+ */
 function renameEventImageWithId($id, $extension) {
-    $temp = $id .'_event'. $extension;
+    $temp = $id . '_event' . $extension;
     $query = "UPDATE evenement SET image = :temp WHERE id = :id";
     $ps = myDatabase()->prepare($query);
     $ps->bindParam(':temp', $temp);
@@ -152,9 +187,14 @@ function renameEventImageWithId($id, $extension) {
     $ps->execute();
 }
 
-// Function that renames the image with it's user_id from the database.
+/**
+ * Function that renames the image with it's user_id from the database.
+ * @param type $id
+ * @param type $extension
+ * @return type
+ */
 function renameUserImageWithId($id, $extension) {
-    $temp = $id .'_avatar'. $extension;
+    $temp = $id . '_avatar' . $extension;
     $query = "UPDATE utilisateur SET avatar = :temp WHERE id = :id";
     $ps = myDatabase()->prepare($query);
     $ps->bindParam(':temp', $temp);
@@ -163,8 +203,10 @@ function renameUserImageWithId($id, $extension) {
     return $isok;
 }
 
-// TO FINISH!!! (add the table "endroit" informations)
-// Function that displays all the events order by the date of creation. 
+/**
+ * TO FINISH!!! (add the informations of the table "endroit").
+ * Function that displays all the events order by the date of creation. 
+ */
 function getAllEvents() {
     $query = "SELECT * FROM evenement ORDER BY dateDebut";
     $qr = myDatabase()->prepare($query);
@@ -177,7 +219,7 @@ function getAllEvents() {
         $event_dateend = $row['dateFin'];
         $event_desc = $row['description'];
         $event_image = $row['image'];
-        
+
         echo "<div class='col-xs-6 col-lg-4'>
                   <a href='event_details.php?event_id=$event_id' class='thumbnail' >
                     <img alt='Image' src='images/event_images/$event_image' style='width:500px;height:300px;padding:2rem'>
@@ -189,7 +231,10 @@ function getAllEvents() {
     }
 }
 
-// Function that displays the details of an event.
+/**
+ * Function that displays the details of an event.
+ * @param type $event_id
+ */
 function getEventDetail($event_id) {
     $query = "SELECT * FROM evenement WHERE id='$event_id'";
     $qr = myDatabase()->prepare($query);
@@ -229,7 +274,10 @@ function getEventDetail($event_id) {
     }
 }
 
-// Function that inserts new users to the database.
+/**
+ * Function that inserts a user in the database.
+ * @param type $datas
+ */
 function insertNewUser($datas) {
     $query = "INSERT INTO utilisateur (email, pseudo, password) VALUES (:email, :pseudo, :password)";
 
@@ -242,7 +290,11 @@ function insertNewUser($datas) {
     $ps->execute();
 }
 
-// Function that checks if the user is logged, with the correct credentials.
+/**
+ * Function that checks if the user is logged, with the correct credentials.
+ * @param type $datas
+ * @return boolean
+ */
 function checkUser($datas) {
     $sql = "SELECT * FROM utilisateur where email = :email ";
 
@@ -268,7 +320,11 @@ function checkUser($datas) {
     return $isok;
 }
 
-// Function that returns the group id of the user.
+/**
+ * Function that returns the group id of the user.
+ * @param type $datas
+ * @return boolean
+ */
 function getGroup($datas) {
     $sql = "SELECT privilege FROM utilisateur WHERE email = :email";
 
@@ -284,7 +340,10 @@ function getGroup($datas) {
     return $isok[0][0];
 }
 
-// Function that returns the events searched in the searchbar.
+/**
+ * Function that returns the events searched in the searchbar.
+ * @param type $search_query
+ */
 function searchAnEvent($search_query) {
     $query = "SELECT * FROM evenement WHERE titre LIKE '%$search_query%'";
     $qr = myDatabase()->query($query);
@@ -312,74 +371,8 @@ function searchAnEvent($search_query) {
 }
 
 /**
- * L'utilisateur est-il loggé ?
- * @return boolean True si loggé
+ * Function that gets the different countries and put them into an option list.
  */
-function isLoggedIn() {
-    return (isset($_SESSION['login'])) ? $_SESSION['login'] : false;
-}
-
-/**
- * Défini si l'utilisateur est loggué ou non
- * @param {boolean} $value  True pour loggué, autrement false
- */
-function setLoggedIn($value) {
-    $_SESSION['login'] = $value;
-}
-
-/**
- * Défini le groupe dans la session
- * @param type $value Le nom du groupe
- */
-function setUserGroup($value) {
-    $_SESSION['group'] = $value;
-}
-
-/**
- * Récupère le nom du groupe de l'utilisateur
- * @return type
- */
-function getUserGroup() {
-    return (isset($_SESSION['group'])) ? $_SESSION['group'] : 0;
-}
-
-/**
- * Est-ce que l'utilisateur connecté est Membre
- * @return type
- */
-function isUserMember() {
-    return (getUserGroup() == 1);
-}
-
-/**
- * Est-ce que l'utilisateur connecté est Administrateur
- * @return type
- */
-function isUserAdmin() {
-    return (getUserGroup() == 2);
-}
-
-/**
- * Récupère l'ID de l'utilisateur.
- * @return type
- */
-function getUserId() {
-    return (isset($_SESSION['userid'])) ? $_SESSION['userid'] : -1;
-}
-
-function getUserEmail() {
-    return $_SESSION['useremail'];
-}
-
-/**
- * Déconnecte l'utilisateur
- */
-function logOutUser() {
-    $_SESSION = array();
-    session_destroy();
-}
-
-// Function that gets the different countries and put them in an option list
 function getCountriesList() {
     $query = "SELECT * FROM pays";
     $qr = myDatabase()->query($query);
@@ -392,7 +385,10 @@ function getCountriesList() {
     }
 }
 
-// Function that inserts comments to the database.
+/**
+ * Function that inserts comments to the database.
+ * @param type $datas
+ */
 function insertNewComment($datas) {
     $query1 = "INSERT INTO commentaire (time, texte, id_utilisateur, id_evenement) VALUES (:time, :text, :id_utilisateur, :id_evenement)";
 
@@ -406,8 +402,10 @@ function insertNewComment($datas) {
     $ps1->execute();
 }
 
-// TO DO (NOT ALL THE USERS CAN DISPLAY THEIR COMMENTS)
-// Function that displays all the comments of an event.
+/**
+ * Function that displays all the comments of an event.
+ * @param type $event_id
+ */
 function displayEventComment($event_id) {
     $query = "SELECT time,texte,pseudo,avatar FROM commentaire,utilisateur,evenement WHERE evenement.id= $event_id and   commentaire.id_utilisateur = utilisateur.id and commentaire.id_evenement = evenement.id";
     $qr = myDatabase()->prepare($query);
@@ -435,11 +433,14 @@ function displayEventComment($event_id) {
                             <div class='media-body'>
                             $comment_text
                             </div>
-                            <div id='postOptions' class='media-right'>$comment_datetime
+                            <div id='postOptions' class='media-right' style='width:100px;'>$comment_datetime
                                 <br/>
-                                <a href='#'><span class='input-group-addon'><i class='glyphicon glyphicon-exclamation-sign'></i></span></a>
                                 <br/>
-                                <a href='#'><span class='input-group-addon'><i class='glyphicon glyphicon-remove-sign'></i></span></a>
+                                <a href='#'><span class='input-group-addon' style='color:red;'><b>BAN </b><i class='glyphicon glyphicon-remove'></i></span></a>
+                                <br/>
+                                <a href='#'><span class='input-group-addon'style='color:green;'><b>UNBAN </b><i class='glyphicon glyphicon-ok'></i></span></a>
+                                <br/>
+                                <a href='#'><span class='input-group-addon'><b>DELETE </b><i class='glyphicon glyphicon-trash'></i></span></a>
                             </div>
                         </li>
                     </ul>
@@ -448,7 +449,10 @@ function displayEventComment($event_id) {
     }
 }
 
-// Function that modify the user informations from the database.
+/**
+ * Function that modify the user informations from the database.
+ * @param type $datas
+ */
 function editUserData($datas) {
     $query3 = "UPDATE utilisateur SET nom = :name, prenom = :firstname, organisation = :organisation, adresse = :adress, avatar = :avatar, description = :description WHERE id = :id_utilisateur";
     $ps3 = myDatabase()->prepare($query3);
@@ -463,3 +467,121 @@ function editUserData($datas) {
 
     $ps3->execute();
 }
+
+// Function that modify the event informations from the database.
+//function editEventData($datas) {
+//    $query3 = "UPDATE evenement SET titre = :title, description = :description, dateDebut = :datestart, dateFin = :dateend, image = :image WHERE id = :id_evenement";
+//    $ps3 = myDatabase()->prepare($query3);
+//
+//    $ps3->bindParam(':title', $datas['event_title'], PDO::PARAM_STR);
+//    $ps3->bindParam(':description', $datas['event_desc'], PDO::PARAM_STR);
+//    $ps3->bindParam(':datestart', $datas['event_datestart'], PDO::PARAM_STR);
+//    $ps3->bindParam(':dateend', $datas['event_dateend'], PDO::PARAM_STR);
+//    $ps3->bindParam(':image', $datas['event_image'], PDO::PARAM_STR);
+//    $ps3->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
+//
+//    $ps3->execute();
+//}
+
+/**
+ * Function that displays all the events posted by a user.
+ * @param type $datas
+ */
+function displayEventFromUser($datas) {
+    $query = "SELECT evenement.id,evenement.titre FROM evenement WHERE id_utilisateur = :id_utilisateur";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_STR);
+    $ps->execute();
+    $test = $ps->fetchAll(PDO::FETCH_ASSOC);
+    echo '<select name="id_event" class="input-sm"><option>Séléctionner un événement</option>';
+    foreach ($test as $row) {
+        $id = $row['id'];
+        $title = $row['titre'];
+
+        echo "<div><option value='$id'>$title</option></div>";
+    }
+    echo '</select>';
+}
+
+function deleteSelectedEventFromUser($datas) {
+    $query = "DELETE FROM evenement WHERE id = :id_evenement";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
+    $ps->execute();
+}
+
+//<---------- SESSIONS FUNCTIONS END ---------->
+
+/**
+ * Function that checks if the user is logged or not.
+ * @return boolean True     // If logged return TRUE.
+ */
+function isLoggedIn() {
+    return (isset($_SESSION['login'])) ? $_SESSION['login'] : false;
+}
+
+/**
+ * Function that define if the user in logged or not.
+ * @param {boolean} $value  // Return TRUE if logged or FALSE if not.
+ */
+function setLoggedIn($value) {
+    $_SESSION['login'] = $value;
+}
+
+/**
+ * Function that sets the group in the session.
+ * @param type $value       // The name of the group.
+ */
+function setUserGroup($value) {
+    $_SESSION['group'] = $value;
+}
+
+/**
+ * Function that returns the groupe name of the user.
+ * @return type
+ */
+function getUserGroup() {
+    return (isset($_SESSION['group'])) ? $_SESSION['group'] : 0;
+}
+
+/**
+ * Funtion that checks if the user is a member.
+ * @return type
+ */
+function isUserMember() {
+    return (getUserGroup() == 1);
+}
+
+/**
+ * Funtion that checks if the user is an admin..
+ * @return type
+ */
+function isUserAdmin() {
+    return (getUserGroup() == 2);
+}
+
+/**
+ * Function that returns the Id of the user.
+ * @return type
+ */
+function getUserId() {
+    return (isset($_SESSION['userid'])) ? $_SESSION['userid'] : -1;
+}
+
+/**
+ * Function that returns the user email from the sessions.
+ * @return type
+ */
+function getUserEmail() {
+    return $_SESSION['useremail'];
+}
+
+/**
+ * Function that disconnect the user and destroy the session.
+ */
+function logOutUser() {
+    $_SESSION = array();
+    session_destroy();
+}
+
+//<---------- SESSIONS FUNCTIONS END ---------->

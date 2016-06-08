@@ -30,40 +30,40 @@ require 'controller.php';
                                 <fieldset>
                                     <div class="form-group">
                                         <label>Titre :</label>
-                                        <input class="form-control" placeholder="Titre" name="event_title" type="text" required="">
+                                        <input class="form-control" placeholder="Titre" name="edit_title" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Rue :</label>
-                                        <input class="form-control" placeholder="Rue" name="event_street" type="text" required="">
+                                        <input class="form-control" placeholder="Rue" name="edit_street" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Ville :</label>
-                                        <input class="form-control" placeholder="Ville" name="event_city" type="text" required="">
+                                        <input class="form-control" placeholder="Ville" name="edit_city" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Pays :</label>
-                                        <select class="form-control" name="event_country" required="">
+                                        <select class="form-control" name="edit_country" required="">
                                             <option>Séléctionnez un pays</option>
                                             <?php getCountriesList() ?>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Date de début :</label>
-                                        <input class="form-control"  name="event_datestart" type="date" required="">
+                                        <input class="form-control"  name="edit_datestart" type="date" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Date de fin :</label>
-                                        <input class="form-control"  name="event_dateend" type="date">
+                                        <input class="form-control"  name="edit_dateend" type="date">
                                     </div>
                                     <div class="form-group">
                                         <label>Description :</label>
-                                        <textarea class="form-control" placeholder="Description" name="event_desc" cols="50" rows="10" required="" style="max-width: 100%;"></textarea>
+                                        <textarea class="form-control" placeholder="Description" name="edit_desc" cols="50" rows="10" required="" style="max-width: 100%;"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Image :</label>
-                                        <input class="form-control" placeholder="Image" name="event_image" type="file" required="">
+                                        <input class="form-control" placeholder="Image" name="edit_image" type="file" required="">
                                     </div>
-                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_event" value="Ajouter l'événement">
+                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="edit_event" value="Ajouter l'événement">
                                 </fieldset>
                             </form>
                         </div>
