@@ -436,11 +436,14 @@ function displayEventComment($event_id) {
                             <div id='postOptions' class='media-right' style='width:100px;'>$comment_datetime
                                 <br/>
                                 <br/>
-                                <a href='#'><span class='input-group-addon' style='color:red;'><b>BAN </b><i class='glyphicon glyphicon-remove'></i></span></a>
+                                <form method='POST' action='#'>
+                                <input type='hidden' name='hidden_id' value = $event_id> 
+                                <button style='width:100px;' type='submit' name='ban_comment' class='btn btn-danger btn-sm'>Bannir <span class='glyphicon glyphicon-remove'></span></button>
                                 <br/>
-                                <a href='#'><span class='input-group-addon'style='color:green;'><b>UNBAN </b><i class='glyphicon glyphicon-ok'></i></span></a>
+                                <button style='width:100px;'type='submit' name='unban_comment' class='btn btn-success btn-sm'>Débanir <span class='glyphicon glyphicon-ok'></span></button>
                                 <br/>
-                                <a href='#'><span class='input-group-addon'><b>DELETE </b><i class='glyphicon glyphicon-trash'></i></span></a>
+                                <button style='width:100px;'type='submit' name='delete_comment' class='btn btn-primary btn-sm'>Supprimer <span class='glyphicon glyphicon-trash'></span></button>
+                                </form>
                             </div>
                         </li>
                     </ul>
@@ -468,7 +471,7 @@ function editUserData($datas) {
     $ps3->execute();
 }
 
-// Function that modify the event informations from the database.
+//Function that modify the event informations from the database.
 //function editEventData($datas) {
 //    $query3 = "UPDATE evenement SET titre = :title, description = :description, dateDebut = :datestart, dateFin = :dateend, image = :image WHERE id = :id_evenement";
 //    $ps3 = myDatabase()->prepare($query3);
@@ -503,10 +506,25 @@ function displayEventFromUser($datas) {
     echo '</select>';
 }
 
+/**
+ * Function that delete from the database the selected event posted by the user.
+ * @param type $datas
+ */
 function deleteSelectedEventFromUser($datas) {
     $query = "DELETE FROM evenement WHERE id = :id_evenement";
     $ps = myDatabase()->prepare($query);
     $ps->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
+    $ps->execute();
+}
+
+/**
+ * Function that delete from the database the selected event posted by the user.
+ * @param type $datas
+ */
+function deleteSelectedCommentFromUser($datas) {
+    $query = "DELETE FROM commentaire WHERE id_evenement = :id_evenement";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_evenement', $datas['comment_id'], PDO::PARAM_STR);
     $ps->execute();
 }
 

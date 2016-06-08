@@ -115,7 +115,7 @@ if (isset($_POST['edit_profile'])) {
 }
 
 // Checks if the edit event button is pressed.
-//if (isset($_POST['edit_event'])) {
+//if (isset($_POST['modify_event'])) {
 //    // Getting the datas (secured!) from the form fields.
 //    $datas['event_title'] = filter_var($_POST['edit_title'], FILTER_SANITIZE_SPECIAL_CHARS);
 ////    $datas['event_street'] = filter_var($_POST['edit_street'], FILTER_SANITIZE_SPECIAL_CHARS);
@@ -124,7 +124,7 @@ if (isset($_POST['edit_profile'])) {
 //    $datas['event_datestart'] = filter_var($_POST['edit_datestart'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 //    $datas['event_dateend'] = filter_var($_POST['edit_dateend'], FILTER_SANITIZE_SPECIAL_CHARS);
 //    $datas['event_desc'] = filter_var($_POST['edit_desc'], FILTER_SANITIZE_SPECIAL_CHARS);
-//    //$datas['event_id'] =
+//    $datas['event_id'] = $_SESSION['event_id'];
 //
 //    // Getting the datas for the image.
 //    $file = $_FILES['edit_image'];       // The name of the image.
@@ -140,9 +140,17 @@ if (isset($_POST['edit_profile'])) {
 //    header('Location: index.php');   
 //}
 
+// Checks if the delete event button is pressed.
 if (isset($_POST['delete_event'])) 
 {
     $datas['event_id'] = $_POST['id_event'];
+    deleteSelectedEventFromUser($datas);
+}
+
+// Checks if the delete comment button is pressed.
+if (isset($_POST['delete_comment'])) 
+{
+    $datas['comment_id'] = $_POST['hidden_id'];
     deleteSelectedEventFromUser($datas);
 }
 

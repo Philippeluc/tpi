@@ -20,8 +20,10 @@ $datas['user_id'] = getUserId();
             <div class="row col-md-offset-0">
                 <h1>Mon compte</h1>
                 <form method="POST" action="#">
+                    <a href="edit_profile.php" class="btn btn-primary btn-sm">Modifier mon profil <span class="glyphicon glyphicon-pencil"></span></a><br/>
                     <?php displayEventFromUser($datas); ?>
-                    <button type="submit" name="delete_event" id="navbarbutton" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
+                    <a href="edit_event.php" class="btn btn-primary btn-sm">Modifier <span class="glyphicon glyphicon-pencil"></span></a>
+                    <button type="submit" name="delete_event" class="btn btn-danger btn-sm">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
                 </form>
             </div>
         </div>

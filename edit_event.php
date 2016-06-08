@@ -63,7 +63,7 @@ require 'controller.php';
                                         <label>Image :</label>
                                         <input class="form-control" placeholder="Image" name="edit_image" type="file" required="">
                                     </div>
-                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="edit_event" value="Ajouter l'événement">
+                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="modify_event" value="Modifier l'événement">
                                 </fieldset>
                             </form>
                         </div>
