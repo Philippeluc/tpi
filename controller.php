@@ -10,7 +10,7 @@ if (isset($_POST['insert_event'])) {
     // Getting the datas (secured!) from the form fields.
     $datas['event_title'] = filter_var($_POST['event_title'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['event_street'] = filter_var($_POST['event_street'], FILTER_SANITIZE_SPECIAL_CHARS);
-    $datas['event_city'] = filter_var($_POST['event_city'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $datas['event_city'] = filter_var($_POST['event_city'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['event_country'] = filter_var($_POST['event_country'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['event_datestart'] = filter_var($_POST['event_datestart'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $datas['event_dateend'] = filter_var($_POST['event_dateend'], FILTER_SANITIZE_SPECIAL_CHARS);
@@ -151,6 +151,55 @@ if (isset($_POST['delete_event']))
 if (isset($_POST['delete_comment'])) 
 {
     $datas['comment_id'] = $_POST['hidden_id'];
-    deleteSelectedEventFromUser($datas);
+    deleteSelectedCommentFromUser($datas);
+}
+
+// Checks if the ban user button is pressed.
+if (isset($_POST['ban_user'])) 
+{
+    $datas['user_id'] = intval($_POST['id_user']);
+    banUser($datas);
+}
+
+// Checks if the unban user button is pressed.
+if (isset($_POST['unban_user'])) 
+{
+    $datas['user_id'] = intval($_POST['id_user']);
+    unbanUser($datas);
+}
+
+// Checks if the ban comment button is pressed.
+if (isset($_POST['ban_comment'])) 
+{
+    $datas['comment_id'] = $_POST['hidden_id'];
+    banComment($datas);
+}
+
+// Checks if the unban comment button is pressed.
+if (isset($_POST['unban_comment'])) 
+{
+    $datas['comment_id'] = $_POST['hidden_id'];
+    unbanComment($datas);
+}
+
+// Checks if the delete user button is pressed.
+if (isset($_POST['delete_user'])) 
+{
+    $datas['user_id'] = $_POST['id_user'];
+    deleteSelectedUser($datas);
+}
+
+// Checks if the ban event button is pressed.
+if (isset($_POST['ban_event'])) 
+{
+    $datas['event_id'] = $_POST['id_event'];
+    banEvent($datas);
+}
+
+// Checks if the unban event button is pressed.
+if (isset($_POST['unban_event'])) 
+{
+    $datas['event_id'] = $_POST['id_event'];
+    unbanEvent($datas);
 }
 

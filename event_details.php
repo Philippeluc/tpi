@@ -18,7 +18,15 @@ require 'controller.php';
             if (isset($_GET['event_id'])) {
                 $event_id = $_GET['event_id'];
                 getEventDetail($event_id);
-                displayEventComment($event_id);
+                if(isUserAdmin())
+                {
+                    displayEventCommentAdmin($event_id);
+                }
+                else
+                {
+                    displayEventCommentUser($event_id);
+                }
+                
             }
             ?>
         </div>

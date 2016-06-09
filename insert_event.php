@@ -26,7 +26,7 @@ require 'controller.php';
                             <h3 class="panel-title">Ajouter un événement</h3>
                         </div>
                         <div class="panel-body" style="width: 800px;">
-                            <form accept-charset="UTF-8" role="form" action="#" method="POST" enctype="multipart/form-data">
+                            <form role="form" action="#" method="POST" enctype="multipart/form-data">
                                 <fieldset>
                                     <div class="form-group">
                                         <label>Titre :</label>

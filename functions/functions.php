@@ -204,11 +204,10 @@ function renameUserImageWithId($id, $extension) {
 }
 
 /**
- * TO FINISH!!! (add the informations of the table "endroit").
  * Function that displays all the events order by the date of creation. 
  */
 function getAllEvents() {
-    $query = "SELECT * FROM evenement ORDER BY dateDebut";
+    $query = "SELECT evenement.id, titre, dateDebut, dateFin, image,endroit.rue, endroit.ville, endroit.iso_pays  FROM evenement, endroit WHERE evenement.id_endroit = endroit.id AND evenement.status = 1 ORDER BY dateDebut";
     $qr = myDatabase()->prepare($query);
     $qr->execute();
     $test = $qr->fetchAll(PDO::FETCH_ASSOC);
@@ -217,8 +216,10 @@ function getAllEvents() {
         $event_title = $row['titre'];
         $event_datestart = $row['dateDebut'];
         $event_dateend = $row['dateFin'];
-        $event_desc = $row['description'];
         $event_image = $row['image'];
+        $event_street = $row['rue'];
+        $event_city = $row['ville'];
+        $event_country = $row['iso_pays'];
 
         echo "<div class='col-xs-6 col-lg-4'>
                   <a href='event_details.php?event_id=$event_id' class='thumbnail' >
@@ -226,7 +227,8 @@ function getAllEvents() {
                   </a>
                   <h3>$event_title</h3>
                   <p>Date de début :$event_datestart</p><p>Date de fin : $event_dateend</p>
-                  <p><a class='btn btn-default' href='event_details.php?event_id=$event_id' role='button'>Détails &raquo;</a></p>
+                  <p>Lieu : $event_street, $event_city, $event_country</p>
+                  <p><a class='btn btn-primary' href='event_details.php?event_id=$event_id' role='button'>Détails &raquo;</a></p>
                   </div>";
     }
 }
@@ -236,7 +238,7 @@ function getAllEvents() {
  * @param type $event_id
  */
 function getEventDetail($event_id) {
-    $query = "SELECT * FROM evenement WHERE id='$event_id'";
+    $query = "SELECT evenement.id, titre, dateDebut, dateFin, image, description, endroit.rue, endroit.ville, endroit.iso_pays  FROM evenement, endroit WHERE evenement.id = '$event_id' AND evenement.id_endroit = endroit.id";
     $qr = myDatabase()->prepare($query);
     $qr->execute();
     $test = $qr->fetchAll(PDO::FETCH_ASSOC);
@@ -247,6 +249,9 @@ function getEventDetail($event_id) {
         $event_dateend = $row['dateFin'];
         $event_desc = $row['description'];
         $event_image = $row['image'];
+        $event_street = $row['rue'];
+        $event_city = $row['ville'];
+        $event_country = $row['iso_pays'];
 
         echo "<div class='panel'>
                     <div class='panel-heading'>
@@ -256,9 +261,9 @@ function getEventDetail($event_id) {
                                     <h1 class='pull-left'>$event_title</h1>
                                 </div>
                                 <div class='col-sm-3'>
-                                    <h4 class='pull-right'>
-                                        <a href='insert_comment.php?event_id=$event_id'>Ajouter un commentaire</a>
-                                    </h4>
+                                    <h4 class='pull-right'>";
+                                    if(isUserMember() || isUserAdmin()){echo "<a href='insert_comment.php?event_id=$event_id' class='btn btn-primary'>Ajouter un commentaire</a>";} 
+        echo                       "</h4>
                                 </div>
                             </div>
                         </div>
@@ -267,8 +272,11 @@ function getEventDetail($event_id) {
                         <div class='thumbnail'>
                             <img alt='Image' src='images/event_images/$event_image' style='width:600px;height:400px;padding:2rem'>
                         </div>
-                        $event_desc<br/>
-                        <div class='pull-right'><a class='btn btn-default' href='index.php' role='button'>Accueil &raquo</a></div>
+                        <p>Description : $event_desc</p>
+                        <p>Date de début : $event_datestart</p>
+                        <p>Date de début : $event_dateend</p>
+                        <p>Lieu : $event_street , $event_city, $event_country</p>
+                        <div class='pull-right'><a class='btn btn-primary' href='index.php' role='button'>Accueil &raquo</a></div>
                     </div>
                  </div>";
     }
@@ -365,7 +373,7 @@ function searchAnEvent($search_query) {
                   </a>
                   <h3>$event_title</h3>
                   <p>Date de début :$event_datestart</p><p>Date de fin : $event_dateend</p>
-                  <p><a class='btn btn-default' href='event_details.php?event_id=$event_id' role='button'>Détails &raquo;</a></p>
+                  <p><a class='btn btn-primary' href='event_details.php?event_id=$event_id' role='button'>Détails &raquo;</a></p>
                   </div>";
     }
 }
@@ -374,7 +382,7 @@ function searchAnEvent($search_query) {
  * Function that gets the different countries and put them into an option list.
  */
 function getCountriesList() {
-    $query = "SELECT * FROM pays";
+    $query = "SELECT * FROM pays ORDER BY name ASC";
     $qr = myDatabase()->query($query);
     $result = $qr->fetchAll();
 
@@ -403,15 +411,16 @@ function insertNewComment($datas) {
 }
 
 /**
- * Function that displays all the comments of an event.
+ * Function that displays all the comments from a user.
  * @param type $event_id
  */
-function displayEventComment($event_id) {
-    $query = "SELECT time,texte,pseudo,avatar FROM commentaire,utilisateur,evenement WHERE evenement.id= $event_id and   commentaire.id_utilisateur = utilisateur.id and commentaire.id_evenement = evenement.id";
+function displayEventCommentUser($event_id) {
+    $query = "SELECT commentaire.id,time,texte,pseudo,avatar FROM commentaire,utilisateur,evenement WHERE evenement.id= $event_id AND commentaire.id_utilisateur = utilisateur.id AND commentaire.id_evenement = evenement.id AND commentaire.status = 1";
     $qr = myDatabase()->prepare($query);
     $qr->execute();
     $test = $qr->fetchAll(PDO::FETCH_ASSOC);
     foreach ($test as $row) {
+        $comment_id = $row['id'];
         $comment_text = $row['texte'];
         $comment_datetime = $row['time'];
         $comment_pseudo = $row['pseudo'];
@@ -428,7 +437,6 @@ function displayEventComment($event_id) {
                                 <br/>
                                 <strong>$comment_pseudo</strong>
                                 <br>
-
                             </div>
                             <div class='media-body'>
                             $comment_text
@@ -437,12 +445,59 @@ function displayEventComment($event_id) {
                                 <br/>
                                 <br/>
                                 <form method='POST' action='#'>
-                                <input type='hidden' name='hidden_id' value = $event_id> 
-                                <button style='width:100px;' type='submit' name='ban_comment' class='btn btn-danger btn-sm'>Bannir <span class='glyphicon glyphicon-remove'></span></button>
+                                <input type='hidden' name='hidden_id' value = $comment_id> 
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>";
+    }
+}
+
+/**
+ * Function that displays all the comments from all the users.
+ * @param type $event_id
+ */
+function displayEventCommentAdmin($event_id) {
+    $query = "SELECT commentaire.id,time,texte,pseudo,avatar,commentaire.status FROM commentaire,utilisateur,evenement WHERE evenement.id= $event_id AND commentaire.id_utilisateur = utilisateur.id AND commentaire.id_evenement = evenement.id";
+    $qr = myDatabase()->prepare($query);
+    $qr->execute();
+    $test = $qr->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($test as $row) {
+        $comment_id = $row['id'];
+        $comment_text = $row['texte'];
+        $comment_datetime = $row['time'];
+        $comment_pseudo = $row['pseudo'];
+        $comment_avatar = $row['avatar'];
+        $comment_status = $row['status'];
+
+        echo "<div class = 'panel-body'>
+                <div id='comments' class='col-lg-12'>
+                    <ul class='media-list forum'>
+                        <!-- Forum Post -->
+                        <li class='media well'>
+                            <div class='pull-left user-info col-lg-1' href='#'>
+                                <img class='avatar img-circle img-thumbnail' src='images/avatar_images/$comment_avatar'
+                                     width='64' alt='Generic placeholder image'>
                                 <br/>
-                                <button style='width:100px;'type='submit' name='unban_comment' class='btn btn-success btn-sm'>Débanir <span class='glyphicon glyphicon-ok'></span></button>
+                                <strong>$comment_pseudo</strong>
+                                <br>
+                            </div>
+                            <div class='media-body'>
+                            $comment_text
+                            </div>
+                            <div id='postOptions' class='media-right' style='width:100px;'>$comment_datetime
                                 <br/>
-                                <button style='width:100px;'type='submit' name='delete_comment' class='btn btn-primary btn-sm'>Supprimer <span class='glyphicon glyphicon-trash'></span></button>
+                                <br/>
+                                <form method='POST' action='#'>
+                                <input type='hidden' name='hidden_id' value = $comment_id> ";
+        if ($comment_status == 1) {
+            echo "<button style='width:100px;' type='submit' name='ban_comment' class='btn btn-danger btn-sm'>Bloquer <span class='glyphicon glyphicon-remove'></span></button><br/>";
+        } else {
+            echo"<button style='width:100px;'type='submit' name='unban_comment' class='btn btn-success btn-sm'>Débloquer <span class='glyphicon glyphicon-ok'></span></button><br/>";
+        }
+        echo"<button style='width:100px;'type='submit' name='delete_comment' class='btn btn-primary btn-sm'>Supprimer <span class='glyphicon glyphicon-trash'></span></button>
                                 </form>
                             </div>
                         </li>
@@ -473,7 +528,7 @@ function editUserData($datas) {
 
 //Function that modify the event informations from the database.
 //function editEventData($datas) {
-//    $query3 = "UPDATE evenement SET titre = :title, description = :description, dateDebut = :datestart, dateFin = :dateend, image = :image WHERE id = :id_evenement";
+//    $query3 = "UPDATE evenement, endroit SET titre = :titre, description = :description, dateDebut = :datestart, dateFin = :dateend, image = :image, rue = :street, ville = :city, iso_pays = :iso_country WHERE evenement.id = :id_evenement AND evenement.id_endroit = endroit.id";
 //    $ps3 = myDatabase()->prepare($query3);
 //
 //    $ps3->bindParam(':title', $datas['event_title'], PDO::PARAM_STR);
@@ -482,12 +537,77 @@ function editUserData($datas) {
 //    $ps3->bindParam(':dateend', $datas['event_dateend'], PDO::PARAM_STR);
 //    $ps3->bindParam(':image', $datas['event_image'], PDO::PARAM_STR);
 //    $ps3->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
+//    $ps3->bindParam(':street', $datas['event_street'], PDO::PARAM_STR);
+//    $ps3->bindParam(':city', $datas['event_city'], PDO::PARAM_STR);
+//    ps3->bindParam(':iso_country', $datas['event_country'], PDO::PARAM_STR);
 //
 //    $ps3->execute();
 //}
 
 /**
- * Function that displays all the events posted by a user.
+ * Function that bans a user.
+ * @param type $datas
+ */
+function banUser($datas) {
+    $query = "UPDATE utilisateur SET status = 2 WHERE id = :id_utilisateur";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_INT);
+    $ps->execute();
+}
+
+/**
+ * Function that unbans a user.
+ * @param type $datas
+ */
+function unbanUser($datas) {
+    $query = "UPDATE utilisateur SET status = 1 WHERE id = :id_utilisateur";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_INT);
+    $ps->execute();
+}
+
+/**
+ * Function that bans a comment.
+ */
+function banComment($datas) {
+    $query = "UPDATE commentaire SET status = 2 WHERE id = :id_commentaire";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_commentaire', $datas['comment_id'], PDO::PARAM_STR);
+    $ps->execute();
+}
+
+/**
+ * Function that unbans a comment.
+ */
+function unbanComment($datas) {
+    $query = "UPDATE commentaire SET status = 1 WHERE id = :id_commentaire";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_commentaire', $datas['comment_id'], PDO::PARAM_STR);
+    $ps->execute();
+}
+
+/**
+ * Fuinction that bans an event.
+ */
+function banEvent($datas) {
+    $query = "UPDATE evenement SET status = 2 WHERE id = :id_evenement ";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
+    $ps->execute();
+}
+
+/**
+ * Function that unbans an event.
+ */
+function unbanEvent($datas) {
+    $query = "UPDATE evenement SET status = 1 WHERE id = :id_evenement";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
+    $ps->execute();
+}
+
+/**
+ * Function that displays all the events posted by a user in a select.
  * @param type $datas
  */
 function displayEventFromUser($datas) {
@@ -507,12 +627,64 @@ function displayEventFromUser($datas) {
 }
 
 /**
+ * Function that displays all the events in a select.
+ * @param type $datas
+ */
+function displayAllEvents($datas) {
+    $query = "SELECT evenement.id,evenement.titre, evenement.status FROM evenement";
+    $ps = myDatabase()->prepare($query);
+    $ps->execute();
+    $test = $ps->fetchAll(PDO::FETCH_ASSOC);
+    echo '<select style="width:200px" name="id_event" class="input-sm"><option>Séléctionner un événement</option>';
+    foreach ($test as $row) {
+        $id = $row['id'];
+        $title = $row['titre'];
+        $status = $row['status'];
+        echo "<div><option value='$id'>$title</option></div>";
+    }
+    echo '</select>';
+
+}
+
+/**
+ * Function that displays all the usersin a select
+ * @param type $datas
+ */
+function displayUsers($datas) {
+    $query = "SELECT utilisateur.id,utilisateur.pseudo FROM utilisateur WHERE privilege = 1";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_STR);
+    $ps->execute();
+    $test = $ps->fetchAll(PDO::FETCH_ASSOC);
+    echo '<select style="width:200px" name="id_user" class="input-sm"><option>Séléctionner un utilisateur</option>';
+    foreach ($test as $row) {
+        $id = $row['id'];
+        $pseudo = $row['pseudo'];
+
+        echo "<div><option value='$id'>$pseudo</option></div>";
+    }
+    echo '</select>';
+}
+
+/**
  * Function that delete from the database the selected event posted by the user.
  * @param type $datas
  */
 function deleteSelectedEventFromUser($datas) {
     $query = "DELETE FROM evenement WHERE id = :id_evenement";
+    $query2 = "SELECT id_endroit FROM evenement";
+    $query3 = "DELETE FROM endroit WHERE id = :id_endroit";
+
     $ps = myDatabase()->prepare($query);
+    $ps2 = myDatabase()->prepare($query2);
+    $ps3 = myDatabase()->prepare($query3);
+
+    $isok = $ps2->execute();
+    $isok = $ps2->fetch(PDO::FETCH_NUM);
+    $id_endroit = $isok[0];
+    $ps3->bindParam(':id_endroit', $id_endroit, PDO::PARAM_STR);
+    $ps3->execute();
+
     $ps->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
     $ps->execute();
 }
@@ -522,9 +694,20 @@ function deleteSelectedEventFromUser($datas) {
  * @param type $datas
  */
 function deleteSelectedCommentFromUser($datas) {
-    $query = "DELETE FROM commentaire WHERE id_evenement = :id_evenement";
+    $query = "DELETE FROM commentaire WHERE id = :id_comment";
     $ps = myDatabase()->prepare($query);
-    $ps->bindParam(':id_evenement', $datas['comment_id'], PDO::PARAM_STR);
+    $ps->bindParam(':id_comment', $datas['comment_id'], PDO::PARAM_STR);
+    $ps->execute();
+}
+
+/**
+ * Function that delete from the database the selected user.
+ * @param type $datas
+ */
+function deleteSelectedUser($datas) {
+    $query = "DELETE FROM utilisateur WHERE id = :id_utilisateur";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_STR);
     $ps->execute();
 }
 

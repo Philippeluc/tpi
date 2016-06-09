@@ -25,17 +25,19 @@ DROP TABLE IF EXISTS `commentaire`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `commentaire` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `time` datetime NOT NULL,
   `texte` text NOT NULL,
   `id_utilisateur` int(11) NOT NULL,
   `id_evenement` int(11) NOT NULL,
-  PRIMARY KEY (`time`,`id_utilisateur`,`id_evenement`),
+  `status` int(11) DEFAULT '1' COMMENT 'UNBANN = 1\nBaAN = 2',
+  PRIMARY KEY (`id`,`time`,`id_utilisateur`,`id_evenement`),
   KEY `fk_utilisateur_idx` (`id_utilisateur`),
   KEY `fk_commentaire_utilisateur_idx` (`id_utilisateur`),
   KEY `fk_commentaire_evenement_idx` (`id_evenement`),
-  CONSTRAINT `fk_commentaire_evenement` FOREIGN KEY (`id_evenement`) REFERENCES `evenement` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_commentaire_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_commentaire_evenement` FOREIGN KEY (`id_evenement`) REFERENCES `evenement` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_commentaire_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +46,6 @@ CREATE TABLE `commentaire` (
 
 LOCK TABLES `commentaire` WRITE;
 /*!40000 ALTER TABLE `commentaire` DISABLE KEYS */;
-INSERT INTO `commentaire` VALUES ('2016-06-07 16:04:33','J&#39;adore ce festival !',18,22),('2016-06-07 16:16:24','Ce festival est super !',19,22),('2016-06-08 07:36:49','J&#39;ai hâte de m y rendre ',18,22);
 /*!40000 ALTER TABLE `commentaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +64,7 @@ CREATE TABLE `endroit` (
   PRIMARY KEY (`id`),
   KEY `fk_pays_idx` (`iso_pays`),
   CONSTRAINT `fk_pays` FOREIGN KEY (`iso_pays`) REFERENCES `pays` (`iso`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +73,6 @@ CREATE TABLE `endroit` (
 
 LOCK TABLES `endroit` WRITE;
 /*!40000 ALTER TABLE `endroit` DISABLE KEYS */;
-INSERT INTO `endroit` VALUES (55,'26 Rue Peillonnex','Gen&Atilde;&uml;ve ','CH');
 /*!40000 ALTER TABLE `endroit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,8 +97,8 @@ CREATE TABLE `evenement` (
   KEY `fk_endroit_idx` (`id_endroit`),
   KEY `fk_utilisateur_idx` (`id_utilisateur`),
   CONSTRAINT `fk_endroit` FOREIGN KEY (`id_endroit`) REFERENCES `endroit` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +107,6 @@ CREATE TABLE `evenement` (
 
 LOCK TABLES `evenement` WRITE;
 /*!40000 ALTER TABLE `evenement` DISABLE KEYS */;
-INSERT INTO `evenement` VALUES (22,'Avant-première','Avant-première des films du festival Sundance.','2016-06-08','2016-06-08','22_event.jpg',1,55,18);
 /*!40000 ALTER TABLE `evenement` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,10 +152,10 @@ CREATE TABLE `utilisateur` (
   `prenom` varchar(255) DEFAULT 'Non défini',
   `organisation` varchar(255) DEFAULT 'Non défini',
   `adresse` varchar(255) DEFAULT 'Non défini',
-  `avatar` varchar(255) DEFAULT 'Non défini',
+  `avatar` varchar(255) DEFAULT 'default_avatar.png',
   `description` varchar(255) DEFAULT 'Non défini',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +164,6 @@ CREATE TABLE `utilisateur` (
 
 LOCK TABLES `utilisateur` WRITE;
 /*!40000 ALTER TABLE `utilisateur` DISABLE KEYS */;
-INSERT INTO `utilisateur` VALUES (18,'philippe.k@eduge.ch','Philippeluc','40bd001563085fc35165329ea1ff5c5ecbdbbeef',1,1,'Ku','Philippe','PoSmith','26 Rue Peillonnex','18_avatar.png','Je suis fatigué...'),(19,'linda.k@eduge.ch','Linda56789','40bd001563085fc35165329ea1ff5c5ecbdbbeef',1,1,'Ku','Linda','Equinoxe','26 Rue Peillonnex','19_avatar.jpeg','J&#39;adore la nature.');
 /*!40000 ALTER TABLE `utilisateur` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -178,4 +176,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-08  7:39:35
+-- Dump completed on 2016-06-09 16:36:04
