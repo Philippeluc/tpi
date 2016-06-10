@@ -12,9 +12,9 @@ if (isset($_POST['insert_event'])) {
     $datas['event_street'] = filter_var($_POST['event_street'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['event_city'] = filter_var($_POST['event_city'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['event_country'] = filter_var($_POST['event_country'], FILTER_SANITIZE_SPECIAL_CHARS);
-    $datas['event_datestart'] = filter_var($_POST['event_datestart'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $datas['event_datestart'] = filter_var($_POST['event_datestart'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['event_dateend'] = filter_var($_POST['event_dateend'], FILTER_SANITIZE_SPECIAL_CHARS);
-    $datas['event_desc'] = filter_var($_POST['event_desc'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $datas['event_desc'] = $_POST['event_desc'];
     $datas['user_id'] = getUserId();
 
     // Getting the datas for the image.
@@ -78,7 +78,7 @@ if (isset($_REQUEST['logout'])) {
 if (isset($_POST['insert_comment'])) {
     // Getting the datas (secured!) from the form fields.    
     $datas['comment_time'] = date('Y-m-d H:i:s');
-    $datas['comment_text'] = filter_var($_POST['comment'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $datas['comment_text'] = $_POST['comment'];
     $datas['event_id'] = $_REQUEST['event_id'];
     $datas['user_id'] = getUserId();
 
@@ -96,7 +96,7 @@ if (isset($_POST['edit_profile'])) {
     $datas['user_firstname'] = filter_var($_POST['modify_firstname'], FILTER_SANITIZE_SPECIAL_CHARS);
     $datas['user_organisation'] = filter_var($_POST['modify_organisation'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $datas['user_adress'] = filter_var($_POST['modify_adress'], FILTER_SANITIZE_SPECIAL_CHARS);
-    $datas['user_desc'] = filter_var($_POST['modify_desc'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $datas['user_desc'] = $_POST['modify_desc'];
     $datas['user_id'] = getUserId();
 
     // Getting the datas for the image.
@@ -115,7 +115,7 @@ if (isset($_POST['edit_profile'])) {
 }
 
 // Checks if the edit event button is pressed.
-//if (isset($_POST['modify_event'])) {
+//if (isset($_POST['edit_event'])) {
 //    // Getting the datas (secured!) from the form fields.
 //    $datas['event_title'] = filter_var($_POST['edit_title'], FILTER_SANITIZE_SPECIAL_CHARS);
 ////    $datas['event_street'] = filter_var($_POST['edit_street'], FILTER_SANITIZE_SPECIAL_CHARS);
@@ -123,7 +123,7 @@ if (isset($_POST['edit_profile'])) {
 ////    $datas['event_country'] = filter_var($_POST['edit_country'], FILTER_SANITIZE_SPECIAL_CHARS);
 //    $datas['event_datestart'] = filter_var($_POST['edit_datestart'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 //    $datas['event_dateend'] = filter_var($_POST['edit_dateend'], FILTER_SANITIZE_SPECIAL_CHARS);
-//    $datas['event_desc'] = filter_var($_POST['edit_desc'], FILTER_SANITIZE_SPECIAL_CHARS);
+//    $datas['event_desc'] = $_POST['edit_desc'];
 //    $datas['event_id'] = $_SESSION['event_id'];
 //
 //    // Getting the datas for the image.
@@ -141,10 +141,17 @@ if (isset($_POST['edit_profile'])) {
 //}
 
 // Checks if the delete event button is pressed.
-if (isset($_POST['delete_event'])) 
+//if (isset($_POST['delete_event'])) 
+//{
+//    $datas['event_id'] = $_POST['id_event'];
+//    deleteSelectedEventFromUser($datas);
+//}
+
+// Checks if the delete user button is pressed.
+if (isset($_POST['delete_user'])) 
 {
-    $datas['event_id'] = $_POST['id_event'];
-    deleteSelectedEventFromUser($datas);
+    $datas['user_id'] = $_POST['id_user'];
+    deleteSelectedUser($datas);
 }
 
 // Checks if the delete comment button is pressed.
@@ -152,6 +159,13 @@ if (isset($_POST['delete_comment']))
 {
     $datas['comment_id'] = $_POST['hidden_id'];
     deleteSelectedCommentFromUser($datas);
+}
+
+// Checks if the delete event button is pressed.
+if (isset($_POST['delete_adminevent'])) 
+{
+    $datas['event_id'] = $_POST['id_adminevent'];
+    deleteSelectedEvent ($datas);
 }
 
 // Checks if the ban user button is pressed.
@@ -182,13 +196,6 @@ if (isset($_POST['unban_comment']))
     unbanComment($datas);
 }
 
-// Checks if the delete user button is pressed.
-if (isset($_POST['delete_user'])) 
-{
-    $datas['user_id'] = $_POST['id_user'];
-    deleteSelectedUser($datas);
-}
-
 // Checks if the ban event button is pressed.
 if (isset($_POST['ban_event'])) 
 {
@@ -202,4 +209,11 @@ if (isset($_POST['unban_event']))
     $datas['event_id'] = $_POST['id_event'];
     unbanEvent($datas);
 }
+
+
+
+
+
+
+
 

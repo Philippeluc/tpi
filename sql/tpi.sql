@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `tpi` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `tpi`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: tpi
@@ -37,7 +35,7 @@ CREATE TABLE `commentaire` (
   KEY `fk_commentaire_evenement_idx` (`id_evenement`),
   CONSTRAINT `fk_commentaire_evenement` FOREIGN KEY (`id_evenement`) REFERENCES `evenement` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `fk_commentaire_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,7 +62,7 @@ CREATE TABLE `endroit` (
   PRIMARY KEY (`id`),
   KEY `fk_pays_idx` (`iso_pays`),
   CONSTRAINT `fk_pays` FOREIGN KEY (`iso_pays`) REFERENCES `pays` (`iso`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,6 +71,7 @@ CREATE TABLE `endroit` (
 
 LOCK TABLES `endroit` WRITE;
 /*!40000 ALTER TABLE `endroit` DISABLE KEYS */;
+INSERT INTO `endroit` VALUES (47,'qq§','rrrrr','Sé'),(49,'gfvbhgv','df1§','AD'),(50,'dvgf','fzgu','AS'),(51,'xdgfx','xcgfxd','AL');
 /*!40000 ALTER TABLE `endroit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,8 +96,8 @@ CREATE TABLE `evenement` (
   KEY `fk_endroit_idx` (`id_endroit`),
   KEY `fk_utilisateur_idx` (`id_utilisateur`),
   CONSTRAINT `fk_endroit` FOREIGN KEY (`id_endroit`) REFERENCES `endroit` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,8 +153,10 @@ CREATE TABLE `utilisateur` (
   `adresse` varchar(255) DEFAULT 'Non défini',
   `avatar` varchar(255) DEFAULT 'default_avatar.png',
   `description` varchar(255) DEFAULT 'Non défini',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `pseudo_UNIQUE` (`pseudo`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,6 +165,7 @@ CREATE TABLE `utilisateur` (
 
 LOCK TABLES `utilisateur` WRITE;
 /*!40000 ALTER TABLE `utilisateur` DISABLE KEYS */;
+INSERT INTO `utilisateur` VALUES (6,'philippe.k@eduge.ch','Philippeluc','40bd001563085fc35165329ea1ff5c5ecbdbbeef',1,2,'Ku','Philippe','PoSmith','26 Rue Peillonnex','6_avatar.png','<p>Je suis &eacute;tudiant au CFPT en Informatique.</p>'),(22,'philippeku1993@gmail.com','totototo','40bd001563085fc35165329ea1ff5c5ecbdbbeef',1,1,'Non défini','Non défini','Non défini','Non défini','default_avatar.png','Non défini');
 /*!40000 ALTER TABLE `utilisateur` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -176,4 +178,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-09 16:36:04
+-- Dump completed on 2016-06-10 16:37:27

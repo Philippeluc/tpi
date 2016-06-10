@@ -365,7 +365,7 @@ function searchAnEvent($search_query) {
         $event_image = $row['image'];
 
         echo "<div class='row col-md-offset-0'>
-                <h1>Résultats de la recherche \"$search_query\"</h1><br/>
+                <h1>Résultat(s) de la recherche \"$search_query\"</h1><br/>
               </div>
                   <div class='col-xs-6 col-lg-4'>
                   <a href='event_details.php' class='thumbnail'>
@@ -610,21 +610,21 @@ function unbanEvent($datas) {
  * Function that displays all the events posted by a user in a select.
  * @param type $datas
  */
-function displayEventFromUser($datas) {
-    $query = "SELECT evenement.id,evenement.titre FROM evenement WHERE id_utilisateur = :id_utilisateur";
-    $ps = myDatabase()->prepare($query);
-    $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_STR);
-    $ps->execute();
-    $test = $ps->fetchAll(PDO::FETCH_ASSOC);
-    echo '<select name="id_event" class="input-sm"><option>Séléctionner un événement</option>';
-    foreach ($test as $row) {
-        $id = $row['id'];
-        $title = $row['titre'];
-
-        echo "<div><option value='$id'>$title</option></div>";
-    }
-    echo '</select>';
-}
+//function displayEventFromUser($datas) {
+//    $query = "SELECT evenement.id,evenement.titre FROM evenement WHERE id_utilisateur = :id_utilisateur";
+//    $ps = myDatabase()->prepare($query);
+//    $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_STR);
+//    $ps->execute();
+//    $test = $ps->fetchAll(PDO::FETCH_ASSOC);
+//    echo '<select name="id_event" class="input-sm"><option>Séléctionner un événement</option>';
+//    foreach ($test as $row) {
+//        $id = $row['id'];
+//        $title = $row['titre'];
+//
+//        echo "<div><option value='$id'>$title</option></div>";
+//    }
+//    echo '</select>';
+//}
 
 /**
  * Function that displays all the events in a select.
@@ -635,7 +635,7 @@ function displayAllEvents($datas) {
     $ps = myDatabase()->prepare($query);
     $ps->execute();
     $test = $ps->fetchAll(PDO::FETCH_ASSOC);
-    echo '<select style="width:200px" name="id_event" class="input-sm"><option>Séléctionner un événement</option>';
+    echo '<select style="width:200px" name="id_adminevent" class="input-sm"><option>Séléctionner un événement</option>';
     foreach ($test as $row) {
         $id = $row['id'];
         $title = $row['titre'];
@@ -670,21 +670,44 @@ function displayUsers($datas) {
  * Function that delete from the database the selected event posted by the user.
  * @param type $datas
  */
-function deleteSelectedEventFromUser($datas) {
+//function deleteSelectedEventFromUser($datas) {
+//    $query = "DELETE FROM evenement WHERE id = :id_evenement";
+//    $query2 = "SELECT id_endroit FROM evenement";
+//    $query3 = "DELETE FROM endroit WHERE id = :id_endroit";
+//
+//    $ps = myDatabase()->prepare($query);
+//    $ps2 = myDatabase()->prepare($query2);
+//    $ps3 = myDatabase()->prepare($query3);
+//
+//    $isok = $ps2->execute();
+//    $isok = $ps2->fetch(PDO::FETCH_NUM);
+//    $id_endroit = $isok[0];
+//    $ps3->bindParam(':id_endroit', $id_endroit, PDO::PARAM_STR);
+//    $ps3->execute();
+//
+//    $ps->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
+//    $ps->execute();
+//}
+
+/**
+ * Function that delete from the database the selected event.
+ * @param type $datas
+ */
+function deleteSelectedEvent($datas) {
     $query = "DELETE FROM evenement WHERE id = :id_evenement";
     $query2 = "SELECT id_endroit FROM evenement";
     $query3 = "DELETE FROM endroit WHERE id = :id_endroit";
-
+    
     $ps = myDatabase()->prepare($query);
     $ps2 = myDatabase()->prepare($query2);
     $ps3 = myDatabase()->prepare($query3);
-
+    
     $isok = $ps2->execute();
     $isok = $ps2->fetch(PDO::FETCH_NUM);
     $id_endroit = $isok[0];
     $ps3->bindParam(':id_endroit', $id_endroit, PDO::PARAM_STR);
     $ps3->execute();
-
+    
     $ps->bindParam(':id_evenement', $datas['event_id'], PDO::PARAM_STR);
     $ps->execute();
 }
@@ -704,9 +727,28 @@ function deleteSelectedCommentFromUser($datas) {
  * Function that delete from the database the selected user.
  * @param type $datas
  */
-function deleteSelectedUser($datas) {
+function deleteSelectedUser($datas) {  
     $query = "DELETE FROM utilisateur WHERE id = :id_utilisateur";
+    $query2 = "SELECT id_endroit FROM evenement";
+    $query3 = "DELETE FROM endroit WHERE id = :id_endroit";
+    
     $ps = myDatabase()->prepare($query);
+    $ps2 = myDatabase()->prepare($query2);
+    $ps3 = myDatabase()->prepare($query3);
+    
+    $isok = $ps2->execute();
+    $isok = $ps2->fetch(PDO::FETCH_NUM);
+    $id_endroit = $isok;
+    
+    // A TERMINER
+    foreach($id_endroit as $value)
+    {
+            $ps3->bindParam(':id_endroit', $value, PDO::PARAM_STR);
+            $ps3->execute();
+    }
+    
+
+    
     $ps->bindParam(':id_utilisateur', $datas['user_id'], PDO::PARAM_STR);
     $ps->execute();
 }

@@ -16,6 +16,10 @@ $datas['user_id'] = getUserId();
         <div class="container">
             <?php
             require 'session_menu.php';
+            if(!isUserAdmin() && !isUserMember())
+            {
+                header('location: index.php');
+            }
             ?>
             <div class="row col-md-offset-0">
                 <h1>Mon compte</h1>

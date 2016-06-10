@@ -20,6 +20,10 @@ require 'controller.php';
                 $search_query = filter_var($_GET['user_query'], FILTER_SANITIZE_SPECIAL_CHARS);
                 searchAnEvent($search_query);
             }
+            if(!isset($_GET['search']))
+            {
+                header('location: index.php');
+            }
             ?>  
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

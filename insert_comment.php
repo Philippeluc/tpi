@@ -9,12 +9,19 @@ require 'controller.php';
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Commenter</title>
+        <!--Script to add TinyMCE, a javascript text editor for the textarea -->
+        <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+        <script>tinymce.init({selector: 'textarea'});</script>
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
             <?php
             require 'session_menu.php';
+            if(!isUserAdmin() && !isUserMember())
+            {
+                header('location: index.php');
+            }
             ?>
             <div class="row col-md-offset-0">
                 <h1>Ajouter un commentaire</h1><br/>
@@ -30,7 +37,7 @@ require 'controller.php';
                                 <fieldset>
                                     <div class="form-group">
                                         <label>Commentaire :</label>
-                                        <textarea class="form-control" placeholder="Commentaire" name="comment" cols="50" rows="10" style="max-width: 100%;" required=""></textarea>
+                                        <textarea class="form-control" placeholder="Commentaire" name="comment" cols="50" rows="10" style="max-width: 100%;"></textarea>
                                     </div>
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_comment" value="Commenter">
                                 </fieldset>

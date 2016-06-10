@@ -9,12 +9,19 @@ require 'controller.php';
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Insérer un événement</title>
+        <!--Script to add TinyMCE, a javascript text editor for the textarea -->
+        <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+        <script>tinymce.init({selector: 'textarea'});</script>
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
-            <?php 
-                require 'session_menu.php';
+            <?php
+            require 'session_menu.php';
+            if(!isUserAdmin() && !isUserMember())
+            {
+                header('location: index.php');
+            }
             ?>
             <div class="row col-md-offset-0">
                 <h1>Ajouter un événement</h1><br/>
@@ -57,7 +64,7 @@ require 'controller.php';
                                     </div>
                                     <div class="form-group">
                                         <label>Description :</label>
-                                        <textarea class="form-control" placeholder="Description" name="event_desc" cols="50" rows="10" required="" style="max-width: 100%;"></textarea>
+                                        <textarea class="form-control" placeholder="Description" name="event_desc" cols="50" rows="10" style="max-width: 100%;"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Image :</label>

@@ -16,6 +16,10 @@ $datas['user_id'] = getUserId();
         <div class="container">
             <?php
             require 'session_menu.php';
+            if(!isUserAdmin())
+            {
+                header('location: index.php');
+            }
             ?>
             <div class="row col-md-offset-0">
                 <h1>Administration</h1>
@@ -32,7 +36,7 @@ $datas['user_id'] = getUserId();
                         <?php displayAllEvents($datas); ?>
                         <button style="width:100px;" type="submit" name="ban_event" class="btn btn-danger btn-sm">Bloquer <span class="glyphicon glyphicon-remove"></span></button>
                         <button style="width:100px;" type="submit" name="unban_event" class="btn btn-success btn-sm">Débloquer <span class="glyphicon glyphicon-ok"></span></button>
-                        <button style="width:100px;" type="submit" name="delete_event" class="btn btn-primary btn-sm">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                        <button style="width:100px;" type="submit" name="delete_adminevent" class="btn btn-primary btn-sm">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
                     </form>
                 </div>
             </div>

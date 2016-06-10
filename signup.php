@@ -15,6 +15,10 @@ require 'controller.php';
         <div class="container">
             <?php 
                 require 'session_menu.php';
+                if(isLoggedIn())
+                {
+                    header('location: index.php');
+                }
             ?>
             <div class="row col-md-offset-0">
                 <h1>Inscription</h1>
