@@ -1,3 +1,12 @@
+﻿<!----------------------------------------------------------------
+* Author : Philippe Ku
+* School / Class : CFPT Informatique / I.FA-P3B
+* Date : 15.06.2016
+* Programm : Event gestion website
+* File : insert_event.php
+* Description : The insert event page of the website
+* Version : 1.10
+----------------------------------------------------------------->
 <?php
 require 'functions/functions.php';
 require 'controller.php';
@@ -8,21 +17,17 @@ require 'controller.php';
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Insérer un événement</title>
-        <!--Script to add TinyMCE, a javascript text editor for the textarea -->
+        <title>Ajouter un événement</title>
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <!-- Script that adds TinyMCE, a JavaScript text editor for the textarea. -->
         <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
         <script>tinymce.init({selector: 'textarea'});</script>
-        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
+        <?php if (!isUserAdmin() && !isUserMember()) { header('location: index.php'); } ?>
         <div class="container">
-            <?php
-            require 'session_menu.php';
-            if(!isUserAdmin() && !isUserMember())
-            {
-                header('location: index.php');
-            }
-            ?>
             <div class="row col-md-offset-0">
                 <h1>Ajouter un événement</h1><br/>
             </div>
@@ -33,25 +38,25 @@ require 'controller.php';
                             <h3 class="panel-title">Ajouter un événement</h3>
                         </div>
                         <div class="panel-body" style="width: 800px;">
-                            <form role="form" action="#" method="POST" enctype="multipart/form-data">
+                            <form method="POST" action="#" enctype="multipart/form-data">
                                 <fieldset>
                                     <div class="form-group">
                                         <label>Titre :</label>
-                                        <input class="form-control" placeholder="Titre" name="event_title" type="text" required="">
+                                        <input class="form-control" placeholder="Titre..." name="event_title" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Rue :</label>
-                                        <input class="form-control" placeholder="Rue" name="event_street" type="text" required="">
+                                        <input class="form-control" placeholder="Rue..." name="event_street" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Ville :</label>
-                                        <input class="form-control" placeholder="Ville" name="event_city" type="text" required="">
+                                        <input class="form-control" placeholder="Ville..." name="event_city" type="text" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Pays :</label>
                                         <select class="form-control" name="event_country" required="">
                                             <option>Séléctionnez un pays</option>
-                                            <?php getCountriesList() ?>
+                                            <?php getCountriesList(); ?>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -64,21 +69,20 @@ require 'controller.php';
                                     </div>
                                     <div class="form-group">
                                         <label>Description :</label>
-                                        <textarea class="form-control" placeholder="Description" name="event_desc" cols="50" rows="10" style="max-width: 100%;"></textarea>
+                                        <textarea class="form-control" name="event_desc" cols="50" rows="10" style="max-width: 100%;"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Image :</label>
-                                        <input class="form-control" placeholder="Image" name="event_image" type="file" required="">
+                                        <input class="form-control" name="<?php echo INPUT; ?>" type="file" required="">
                                     </div>
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_event" value="Ajouter l'événement">
                                 </fieldset>
                             </form>
+                            <?php echo $date_error; ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
     </body>
 </html>

@@ -1,3 +1,12 @@
+﻿<!----------------------------------------------------------------
+* Author : Philippe Ku
+* School / Class : CFPT Informatique / I.FA-P3B
+* Date : 15.06.2016
+* Programm : Event gestion website
+* File : results.php
+* Description : The search results page of the website
+* Version : 1.10
+----------------------------------------------------------------->
 <?php
 require 'functions/functions.php';
 require 'controller.php';
@@ -8,26 +17,15 @@ require 'controller.php';
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Résultats</title>
-        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">    
-    </head>
-    <body>
-        <div class="container">
-            <?php
-            require 'session_menu.php';
-            if (isset($_GET['search'])) 
-                {
-                $search_query = filter_var($_GET['user_query'], FILTER_SANITIZE_SPECIAL_CHARS);
-                searchAnEvent($search_query);
-            }
-            if(!isset($_GET['search']))
-            {
-                header('location: index.php');
-            }
-            ?>  
-        </div>
+        <title>Résultats de la recherche</title>
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
+    </head>
+    <body>
     </body>
 </html>
+
+
+
 

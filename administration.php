@@ -1,7 +1,15 @@
+﻿<!----------------------------------------------------------------
+* Author : Philippe Ku
+* School / Class : CFPT Informatique / I.FA-P3B
+* Date : 15.06.2016
+* Programm : Event gestion website
+* File : administration.php
+* Description : The administration page of the website (reserved to administrators)
+* Version : 1.10
+----------------------------------------------------------------->
 <?php
 require 'functions/functions.php';
 require 'controller.php';
-$datas['user_id'] = getUserId();
 ?>
 <!DOCTYPE html>
 <html>
@@ -11,37 +19,72 @@ $datas['user_id'] = getUserId();
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Administration</title>
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="container">
-            <?php
-            require 'session_menu.php';
-            if(!isUserAdmin())
-            {
-                header('location: index.php');
-            }
-            ?>
-            <div class="row col-md-offset-0">
-                <h1>Administration</h1>
-                <div class="row col-md-offset-1">
-                    <h2>Gestion des utilisateurs</h2>
-                    <form method="POST" action="#">
-                        <?php displayUsers($datas) ?>
-                        <button style='width:100px;' type="submit" name="ban_user" class="btn btn-danger btn-sm">Bloquer <span class="glyphicon glyphicon-remove"></span></button>
-                        <button style='width:100px;' type="submit" name="unban_user" class="btn btn-success btn-sm">Débloquer <span class="glyphicon glyphicon-ok"></span></button>
-                        <button style='width:100px;' type="submit" name="delete_user" class="btn btn-primary btn-sm">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
-                    </form>
-                    <h2>Gestion des événements</h2>
-                    <form method="POST" action="#">
-                        <?php displayAllEvents($datas); ?>
-                        <button style="width:100px;" type="submit" name="ban_event" class="btn btn-danger btn-sm">Bloquer <span class="glyphicon glyphicon-remove"></span></button>
-                        <button style="width:100px;" type="submit" name="unban_event" class="btn btn-success btn-sm">Débloquer <span class="glyphicon glyphicon-ok"></span></button>
-                        <button style="width:100px;" type="submit" name="delete_adminevent" class="btn btn-primary btn-sm">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
-                    </form>
-                </div>
-            </div>
-        </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            // Function that generate a message for the delete confirmation.
+            function confirmDeletion() {
+                return (confirm("Voulez-vous supprimer cette entrée ?"));
+            }
+        </script>
+    </head>
+    <body>
+        <?php
+        if (!isUserAdmin()) {
+            header('location: index.php');
+        }
+        ?>
+        <div class="container col-lg-12">
+            <div class="row col-md">
+                <h1>Mon profil</h1><br/>
+            </div>
+            <div class="row">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Pseudo</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Organisation</th>
+                            <th>Adresse</th>
+                            <th>avatar</th>
+                            <th>Description</th>
+                            <th>Gestion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        displayAllUsers();
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row col-md">
+                <h1>Gérer les événements</h1><br/>
+            </div>
+            <div class="row">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Rue</th>
+                            <th>Ville</th>
+                            <th>Pays</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Description</th>
+                            <th>Image</th>
+                            <th>Gestion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        displayAllAdminEvents();
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </body>
 </html>

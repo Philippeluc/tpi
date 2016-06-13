@@ -1,3 +1,12 @@
+﻿<!----------------------------------------------------------------
+* Author : Philippe Ku
+* School / Class : CFPT Informatique / I.FA-P3B
+* Date : 15.06.2016
+* Programm : Event gestion website
+* File : insert_comment.php
+* Description : The insert comment page of the website
+* Version : 1.10
+----------------------------------------------------------------->
 <?php
 require 'functions/functions.php';
 require 'controller.php';
@@ -8,21 +17,17 @@ require 'controller.php';
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Commenter</title>
-        <!--Script to add TinyMCE, a javascript text editor for the textarea -->
+        <title>Ajouter un commentaire</title>
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <!-- Script that adds TinyMCE, a JavaScript text editor for the textarea. -->
         <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
         <script>tinymce.init({selector: 'textarea'});</script>
-        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
+        <?php if (!isUserAdmin() && !isUserMember()) { header('location: index.php'); } ?>
         <div class="container">
-            <?php
-            require 'session_menu.php';
-            if(!isUserAdmin() && !isUserMember())
-            {
-                header('location: index.php');
-            }
-            ?>
             <div class="row col-md-offset-0">
                 <h1>Ajouter un commentaire</h1><br/>
             </div>
@@ -33,26 +38,21 @@ require 'controller.php';
                             <h3 class="panel-title">Ajouter un commentaire</h3>
                         </div>
                         <div class="panel-body" style="width: 800px;">
-                            <form accept-charset="UTF-8" role="form" action="#" method="POST">
+                            <form method="POST" action="#" enctype="multipart/form-data">
                                 <fieldset>
                                     <div class="form-group">
-                                        <label>Commentaire :</label>
-                                        <textarea class="form-control" placeholder="Commentaire" name="comment" cols="50" rows="10" style="max-width: 100%;"></textarea>
+                                        <label>Texte :</label>
+                                        <textarea class="form-control" name="comment_text" cols="50" rows="10" style="max-width: 100%;"></textarea>
                                     </div>
-                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_comment" value="Commenter">
+                                    <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_comment" value="Ajouter le commentaire">
                                 </fieldset>
                             </form>
+                            <?php echo $comment_error; ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
     </body>
 </html>
-
-
-
-
 
