@@ -48,7 +48,7 @@ require 'controller.php';
             }
             if ($_POST['event_filter'] == "week") {
                 echo '<div class="row col-md-offset-0"><h1>Les événements de la semaine</h1><br/>';
-                // TO DO !
+                getCurrentWeekEvents();
             }
             if ($_POST['event_filter'] == "month") {
                 echo '<div class="row col-md-offset-0"><h1>Les événements du mois : ' . $month . '</h1><br/>';

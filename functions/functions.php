@@ -201,6 +201,58 @@ function getCurrentDayEvents() {
 }
 
 /**
+ * Function that displays all the events of the week with a status unban (status = 1) order by the the event id.
+ */
+function getCurrentWeekEvents() {
+    // Today day of week
+    $n = date("N");
+    // The first day of the week (Monday).
+    $first = abs($n - 1);
+    // The last day of the week (Sunday).
+    $last = abs(7 - $n);
+
+    // Format the dates.
+    $sFirst = 'P' . $first . 'D';
+    $sLast = 'P' . $last . 'D';
+
+    // The day of today with an interval with the first day of the week.
+    $today = new DateTime();
+    $monday = $today->sub(new DateInterval($sFirst));
+    // The day of today with an interval with the last day of the week.
+    $today = new DateTime();
+    $sunday = $today->add(new DateInterval($sLast));
+    
+    $dateMonday = $monday->format('Y-m-d');
+    $dateSunday = $sunday->format('Y-m-d');
+    $query = "SELECT * FROM event, location WHERE dateStart BETWEEN :dateMonday AND :dateSunday AND status = 1 AND event.id_location = location.id_location ORDER BY event.id_event ASC";
+    $ps = myDatabase()->prepare($query);
+    $ps->bindParam(':dateMonday', $dateMonday, PDO::PARAM_STR);
+    $ps->bindParam(':dateSunday', $dateSunday, PDO::PARAM_STR);
+    $ps->execute();
+    $results = $ps->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($results as $row) {
+        $event_id = $row['id_event'];
+        $event_title = $row['title'];
+        $event_datestart = $row['dateStart'];
+        $event_dateend = $row['dateEnd'];
+        $event_image = $row['image'];
+        $event_street = $row['street'];
+        $event_city = $row['city'];
+        $event_country = $row['iso_country'];
+
+        echo '<div class="col-xs-6 col-lg-4">
+                    <a href="event_details.php?event_id=' . $event_id . '" class="thumbnail">
+                        <img alt="Image" src="images/event_images/' . $event_image . '" style="width:500px;height:300px;padding:2rem">
+                    </a>
+                    <h3>' . $event_title . '</h3>
+                    <p>Date de début : ' . $event_datestart . '</p><p>Date de fin : ' . $event_dateend . '</p>
+                    <p>Lieu : ' . $event_street . ' ' . $event_city . ' ' . $event_country . '</p>
+                    <p><a class="btn btn-primary" href="event_details.php?event_id=' . $event_id . '" role="button">Détails</a></p>
+                </div>';
+    }
+}
+
+/**
  * Function that displays all the events of the month with a status unban (status = 1) order by the the event id.
  */
 function getCurrentMonthEvents() {

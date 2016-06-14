@@ -8,7 +8,7 @@
  * File : controller.php
  * Description : This file is the controller that checks all the datas of my website
  * Version : 1.10
- * ************************************************************** */
+ * ****************************************************************/
 
 session_start();
 
