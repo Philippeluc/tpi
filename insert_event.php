@@ -26,7 +26,13 @@ require 'controller.php';
         <script>tinymce.init({selector: 'textarea'});</script>
     </head>
     <body>
-        <?php if (!isUserAdmin() && !isUserMember()) { header('location: index.php'); } ?>
+        <?php
+        // If the user is not a member or an admin.
+        if (!isUserAdmin() && !isUserMember()) {
+            // Redirect to the index.
+            header('location: index.php');
+        }
+        ?>
         <div class="container">
             <div class="row col-md-offset-0">
                 <h1>Ajouter un événement</h1><br/>
@@ -56,7 +62,7 @@ require 'controller.php';
                                         <label>Pays :</label>
                                         <select class="form-control" name="event_country" required="">
                                             <option>Séléctionnez un pays</option>
-                                            <?php getCountriesList(); ?>
+                                            <?php getCountriesList(); // Gets the list of all the countries in the world. ?>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -78,7 +84,10 @@ require 'controller.php';
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_event" value="Ajouter l'événement">
                                 </fieldset>
                             </form>
-                            <?php echo $date_error; ?>
+                            <?php
+                            // Displays the error messages.
+                            echo $date_error;
+                            ?>
                         </div>
                     </div>
                 </div>

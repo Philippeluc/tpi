@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 
-/*******************************************************************
+/***********************************************************************
  * Author : Philippe Ku
  * School / Class : CFPT Informatique / I.FA-P3B
  * Date : 15.06.2016
@@ -8,7 +8,7 @@
  * File : controller.php
  * Description : This file is the controller that checks all the datas of my website
  * Version : 1.10
- * ****************************************************************/
+ * ****************************************************************** */
 
 session_start();
 
@@ -90,16 +90,12 @@ if (isset($_POST['connect_user'])) {
             setLoggedIn(true);
             // Set his group.
             setUserGroup(getUserGroupFromDatabase($datas));
-        }
-        else
-        {
+        } else {
             $banconnect_error = '<div class="alert alert-warning"><strong>ATTENTION !</strong> Votre compte a été banni veuillez contacter l\'administrateur !</div>';
         }
     } else {
         $signin_error = '<div class="alert alert-warning"><strong>ATTENTION !</strong> La combinaison email / mot de passe est incorrecte!</div>';
     }
-    // Redirect to the index page.
-    //header('Location: index.php');
 }
 
 // Checks if the comment button is pressed.
@@ -148,12 +144,12 @@ if (isset($_POST['edit_profile'])) {
     $datas['user_desc'] = $_POST['edit_desc'];
     $datas['user_id'] = getUserId();
 
-    // Getting the datas for the image.
-    //$file = $_FILES['edit_avatar'];       // The name of the image.
-    //$datas['user_avatar'] = filter_var($file['name'], FILTER_SANITIZE_SPECIAL_CHARS);
     // Upload the image in the correct file.
     uploadAvatarImage();
+
+    // Getting the datas for the image.
     $datas['user_avatar'] = $_SESSION['imageavatar_name'];
+
     // Edit the new profile in the database.
     editUserData($datas);
 

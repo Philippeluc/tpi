@@ -26,7 +26,13 @@ require 'controller.php';
         <script>tinymce.init({selector: 'textarea'});</script>
     </head>
     <body>
-        <?php if (!isUserAdmin() && !isUserMember()) { header('location: index.php'); } ?>
+        <?php
+        // If the user is not a member or an admin.
+        if (!isUserAdmin() && !isUserMember()) {
+            // Redirect to the index.
+            header('location: index.php');
+        }
+        ?>
         <div class="container">
             <div class="row col-md-offset-0">
                 <h1>Ajouter un commentaire</h1><br/>
@@ -47,7 +53,10 @@ require 'controller.php';
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_comment" value="Ajouter le commentaire">
                                 </fieldset>
                             </form>
-                            <?php echo $comment_error; ?>
+                            <?php
+                            // Displays the error messages.
+                            echo $comment_error;
+                            ?>
                         </div>
                     </div>
                 </div>

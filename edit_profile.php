@@ -10,6 +10,7 @@
 <?php
 require 'functions/functions.php';
 require 'controller.php';
+// Gets the user infos from the database.
 $results = getUserInfo();
 ?>
 <!DOCTYPE html>
@@ -27,7 +28,13 @@ $results = getUserInfo();
         <script>tinymce.init({selector: 'textarea'});</script>
     </head>
     <body>
-        <?php if (!isUserAdmin() && !isUserMember()) { header('location: index.php'); } ?>
+        <?php
+        // If the user is not a member or an admin.
+        if (!isUserAdmin() && !isUserMember()) {
+            // Redirect to the index.
+            header('location: index.php');
+        }
+        ?>
         <div class="container">
             <div class="row col-md-offset-0">
                 <h1>Modifier mon profil</h1><br/>
@@ -63,7 +70,7 @@ $results = getUserInfo();
                                     </div>
                                     <div class="form-group">
                                         <label>Description :</label>
-                                        <textarea class="form-control" name="edit_desc" cols="50" rows="10" style="max-width: 100%;"><?php echo $results[0]['description'];?></textarea>
+                                        <textarea class="form-control" name="edit_desc" cols="50" rows="10" style="max-width: 100%;"><?php echo $results[0]['description']; ?></textarea>
                                     </div>
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="edit_profile" value="Modifier mon profil">
                                 </fieldset>

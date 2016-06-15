@@ -10,6 +10,7 @@
 <?php
 require 'functions/functions.php';
 require 'controller.php';
+// The user id.
 $datas['user_id'] = getUserId();
 ?>
 <!DOCTYPE html>
@@ -23,16 +24,20 @@ $datas['user_id'] = getUserId();
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript">
-            // Function that generate a message for the delete confirmation.
+            // Function in JavaScript that generate a message for the delete confirmation.
             function confirmDeletion() {
                 return (confirm("Voulez-vous supprimer cette entrée ?"));
             }
         </script>
     </head>
     <body>
-        <?php if (!isUserAdmin() && !isUserMember()) {
+        <?php
+        // If the user is not a member or an admin.
+        if (!isUserAdmin() && !isUserMember()) {
+            // Redirect to the index.
             header('location: index.php');
-        } ?>
+        }
+        ?>
         <div class="container col-lg-11" style="padding-left: 150px;">
             <div class="row col-md">
                 <h1>Mon profil</h1><br/>
@@ -53,11 +58,12 @@ $datas['user_id'] = getUserId();
                     </thead>
                     <tbody>
                         <?php
+                        // Dsiplays the user's profile.
                         displayUserProfile($datas);
                         ?>
                     </tbody>
                 </table>
-<?php echo '<a href="edit_profile.php" class="btn btn-primary pull-right">Modifier mon profil</a><br/>'; ?>
+                <?php echo '<a href="edit_profile.php" class="btn btn-primary pull-right">Modifier mon profil</a><br/>'; ?>
             </div>
             <div class="row col-md">
                 <h1>Mes événements</h1><br/>
@@ -79,6 +85,7 @@ $datas['user_id'] = getUserId();
                     </thead>
                     <tbody>
                         <?php
+                        // Displays all the user's events.
                         displayAllUserEvents($datas);
                         ?>
                     </tbody>

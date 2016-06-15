@@ -24,7 +24,13 @@ require 'controller.php';
     </head>
     <body>
         <div class="container">
-            <?php if(isLoggedIn()) { header('location: index.php'); } ?>
+            <?php
+            // If the user is already logged.
+            if (isLoggedIn()) {
+                // Redirect to the index.
+                header('location: index.php');
+            }
+            ?>
             <div class="row col-md-offset-0">
                 <h1>Connexion</h1>
             </div>
@@ -49,6 +55,7 @@ require 'controller.php';
                                 </fieldset>
                             </form>
                             <?php
+                            // Displays the error messages.
                             echo $signin_error;
                             echo $banconnect_error;
                             ?>

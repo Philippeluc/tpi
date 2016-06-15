@@ -30,7 +30,7 @@ require 'controller.php';
     </head>
     <body>
         <?php
-        // Checks if there is an event id and if so displays the event details and the comments
+        // Checks if there is an event id and if so displays the event details and the comments.
         if (isset($_GET['event_id'])) {
             $event_id = $_GET['event_id'];
             getEventDetail($event_id);

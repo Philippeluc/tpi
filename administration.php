@@ -30,7 +30,9 @@ require 'controller.php';
     </head>
     <body>
         <?php
+        // If the user is not an admin.
         if (!isUserAdmin()) {
+            // Redirect to the index page.
             header('location: index.php');
         }
         ?>
@@ -55,6 +57,7 @@ require 'controller.php';
                     </thead>
                     <tbody>
                         <?php
+                        // Display all the users from the database.
                         displayAllUsers();
                         ?>
                     </tbody>
@@ -80,6 +83,7 @@ require 'controller.php';
                     </thead>
                     <tbody>
                         <?php
+                        // Displays all the events from the database.
                         displayAllAdminEvents();
                         ?>
                     </tbody>

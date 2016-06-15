@@ -10,7 +10,9 @@
 <?php
 require 'functions/functions.php';
 require 'controller.php';
+// Get the id from the url.
 $datas['event_id'] = $_GET['event_id'];
+// Get the informations of the event from the dsatabase.
 $results = getEventInfo($datas);
 ?>
 <!DOCTYPE html>
@@ -28,7 +30,13 @@ $results = getEventInfo($datas);
         <script>tinymce.init({selector: 'textarea'});</script>
     </head>
     <body>
-        <?php if (!isUserAdmin() && !isUserMember()) { header('location: index.php'); } ?>
+        <?php
+        // If the user is not a member or an admin.
+        if (!isUserAdmin() && !isUserMember()) {
+            // Redirect to the index.
+            header('location: index.php');
+        }
+        ?>
         <div class="container">
             <div class="row col-md-offset-0">
                 <h1>Modifier un événement</h1><br/>
@@ -80,7 +88,10 @@ $results = getEventInfo($datas);
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="edit_event" value="Modifier l'événement">
                                 </fieldset>
                             </form>
-                            <?php echo $editdate_error; ?>
+                            <?php
+                            // Displays the error messages.
+                            echo $editdate_error;
+                            ?>
                         </div>
                     </div>
                 </div>

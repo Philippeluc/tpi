@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*****************************************************************
  * Author : Philippe Ku
  * School / Class : CFPT Informatique / I.FA-P3B

@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 
-/* * ***************************************************************
+/*******************************************************************
  * Author : Philippe Ku
  * School / Class : CFPT Informatique / I.FA-P3B
  * Date : 15.06.2016
@@ -8,7 +8,7 @@
  * File : functions.php
  * Description : This file is the model and contains all the functions of my website
  * Version : 1.10
- * ************************************************************** */
+ * ****************************************************************/
 
 //-------------------- DATABASE FUNCTIONS --------------------\\
 
@@ -481,6 +481,10 @@ function editUserData($datas) {
     $ps->execute();
 }
 
+/**
+ * Function that modify the event informations from the database.
+ * @param type $datas      // The informations that we insert into the database.
+ */
 function editUserEvent($datas) {
     $query = "UPDATE event, location SET title = :title, street = :street, city = :city, iso_country = :iso_country, dateStart = :dateStart, dateEnd = :dateEnd, description = :description, image = :image WHERE id_event = :id_event AND event.id_location = location.id_location";
     $ps = myDatabase()->prepare($query);
@@ -678,6 +682,9 @@ function displayAllAdminEvents() {
     }
 }
 
+/**
+ * Function that display all the users of the database.
+ */
 function displayAllUsers() {
     $query = "SELECT * FROM user WHERE privilege = 0";
     $ps = myDatabase()->prepare($query);
@@ -778,6 +785,7 @@ function getUserInfo() {
 }
 
 //-------------------- GENERAL FUNCTIONS --------------------\\
+
 // Upload constants.
 define('INPUT', 'event_image'); // The name of the input file.
 define('TARGET', './images/event_images/');    // The target directory for the event image.

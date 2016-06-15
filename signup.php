@@ -24,9 +24,13 @@ require 'controller.php';
     </head>
     <body>
         <div class="container">
-            <?php if (isLoggedIn()) {
+            <?php
+            // If the user is already logged.
+            if (isLoggedIn()) {
+                // Redirect to the index.
                 header('location: index.php');
-            } ?>
+            }
+            ?>
             <div class="row col-md-offset-0">
                 <h1>Inscription</h1>
             </div>
@@ -58,8 +62,11 @@ require 'controller.php';
                                     <input class="btn btn-lg btn-primary btn-block" type="submit" name="insert_user" value="S'inscrire">
                                 </fieldset>
                             </form>
-                            <?php echo $passwordlength_error; ?>
-                            <?php echo $passwordcheck_error; ?>
+                            <?php
+                            // Displays the error messages.
+                            echo $passwordlength_error;
+                            echo $passwordcheck_error;
+                            ?>
                         </div>
                     </div>
                 </div>
